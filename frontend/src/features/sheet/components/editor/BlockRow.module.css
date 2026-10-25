@@ -52,14 +52,18 @@
   color: var(--color-content-primary);
 }
 
-/* Design: Open Sans 11. Lifted to 14px (M0, X3). */
+/*
+ * Figma "Block row" (2392:4687): Open Sans 14/18, wrapping to a second line rather than cutting the reset
+ * rule (review F2); the row stays 72. A typed reset label longer than two lines is cut at the second.
+ */
 .summary {
+  display: -webkit-box;
   overflow: hidden;
   font-size: var(--font-size-sm);
-  line-height: 19px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  line-height: 18px;
   color: var(--color-content-subtle);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .pin {
