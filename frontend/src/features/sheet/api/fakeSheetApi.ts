@@ -103,13 +103,16 @@ function offline() {
   return new LootbookApiError("Could not reach the Lootbook back end.", 0, null);
 }
 
-/** The first save of an "Offline" or "Stale" character fails once, as the triggers above say. */
-function failFirstSave(name: string, revision: number) {
+/**
+ * The first save of an "Offline" or "Stale" character fails once, as the triggers above say. A new
+ * character has no other device to conflict with, so "Stale" only applies to an existing one.
+ */
+function firstSaveFailure(name: string, existing: boolean): "offline" | "stale" | null {
   const lower = name.trim().toLowerCase();
-  const kind = lower.startsWith("offline") ? "offline" : lower.startsWith("stale") ? "stale" : null;
-  if (!kind || failedOnce.has(lower)) return;
+  const kind = lower.startsWith("offline") ? "offline" : existing && lower.startsWith("stale") ? "stale" : null;
+  if (!kind || failedOnce.has(lower)) return null;
   failedOnce.add(lower);
-  throw kind === "offline" ? offline() : new SheetConflictError(revision + 1);
+  return kind;
 }
 
 export const fakeSheetApi: SheetApi = {
@@ -134,7 +137,13 @@ export const fakeSheetApi: SheetApi = {
     const store = await readStore();
     const record = store[id] ?? seedRecord(id);
     if (record.revision !== baseRevision) throw new SheetConflictError(record.revision);
-    failFirstSave(name, record.revision);
+    const failure = firstSaveFailure(name, true);
+    if (failure === "offline") throw offline();
+    if (failure === "stale") {
+      // Another device saved meanwhile: the stored revision moves on, this save is refused.
+      await writeStore({ ...store, [id]: { ...record, revision: record.revision + 1 } });
+      throw new SheetConflictError(record.revision + 1);
+    }
     const next: StoredRecord = { document: payload.document, revision: record.revision + 1, ...rows(payload) };
     await writeStore({ ...store, [id]: next });
     const list = await fakeCharacterList.read();
@@ -150,7 +159,7 @@ export const fakeSheetApi: SheetApi = {
 
   async createCharacter({ name, payload }) {
     await fakeLatency(SAVE_LATENCY_MS);
-    failFirstSave(name, 0);
+    if (firstSaveFailure(name, false) === "offline") throw offline();
     const id = `fake-${Date.now().toString(36)}`;
     const store = await readStore();
     await writeStore({ ...store, [id]: { document: payload.document, revision: 1, ...rows(payload) } });

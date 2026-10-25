@@ -1,4 +1,5 @@
 import type { BlockPreset } from "../data/blockPresets";
+import { DEFAULT_POOL } from "./fillMethods";
 import type { BlockDensity, BlockType, ResetRule, SheetBlock } from "../types";
 import { mintId } from "./ids";
 
@@ -27,7 +28,14 @@ export function blockFromPreset(preset: BlockPreset): SheetBlock {
       return { ...base, type: "choice", mode, options: [], value: mode === "text" ? "" : mode === "many" ? [] : null };
     }
     case "stats":
-      return { ...base, type: "stats", fill: preset.fill ?? "free", fillConfig: null, entries: [] };
+      // A point pool starts with its rules stored, so the sheet keeps them (sheet-document.md 2.4).
+      return {
+        ...base,
+        type: "stats",
+        fill: preset.fill ?? "free",
+        fillConfig: preset.fill === "pool" ? { ...DEFAULT_POOL } : null,
+        entries: [],
+      };
     case "resource": {
       const model = preset.model ?? "counter";
       return {
