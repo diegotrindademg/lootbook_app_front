@@ -79,10 +79,15 @@
   cursor: pointer;
 }
 
+/* Drawn 36px; the touch target is 44px, filling the 8px gap between icons. */
 .icon::after {
   content: "";
   position: absolute;
-  inset: -4px;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
 }
 
 .iconOn {

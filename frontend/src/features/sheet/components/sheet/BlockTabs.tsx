@@ -59,7 +59,7 @@ export default function BlockTabs({ blocks, activeId, onChange, panelId }: Block
               }
             }}
           >
-            {block.title}
+            <span className={styles.label}>{block.title}</span>
           </button>
         );
       })}

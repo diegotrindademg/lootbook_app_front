@@ -106,6 +106,21 @@
   touch-action: none;
 }
 
+/* Drawn 32 x 44; the touch target is 44 x 44, into the gap beside the pin. */
+.grip {
+  position: relative;
+}
+
+.grip::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
 .dragging .grip {
   cursor: grabbing;
 }

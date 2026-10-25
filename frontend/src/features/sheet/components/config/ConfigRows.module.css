@@ -36,7 +36,10 @@
   color: var(--color-content-primary);
 }
 
+/* The whole line's height is the touch target: 44px. */
 button.name {
+  min-height: 44px;
+  margin: -8px 0;
   cursor: pointer;
 }
 

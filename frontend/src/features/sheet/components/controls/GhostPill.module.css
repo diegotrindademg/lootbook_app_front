@@ -16,11 +16,15 @@
   cursor: pointer;
 }
 
-/* Drawn 34px tall; the touch target is 44px. */
+/* Drawn 34px tall; the touch target is 44px, whatever the border. */
 .pill::after {
   content: "";
   position: absolute;
-  inset: -5px 0;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 44px;
+  transform: translateY(-50%);
 }
 
 .teal {

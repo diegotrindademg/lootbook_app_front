@@ -16,11 +16,11 @@
 
 /* Design: padding 8px 0, flex 1, Acme 12 .08em uppercase. Lifted to 14px (M0, X3). */
 .tab {
+  position: relative;
   flex: 1 1 0;
   min-width: 0;
   min-height: 36px;
-  padding: 8px 0;
-  overflow: hidden;
+  padding: 8px 4px;
   border: none;
   border-radius: var(--radius-pill);
   background: transparent;
@@ -29,8 +29,6 @@
   line-height: 20px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   color: rgb(184 184 184);
   cursor: pointer;
   transition:
@@ -51,4 +49,19 @@
 .tab:focus-visible {
   outline: 2px solid var(--color-content-primary);
   outline-offset: -2px;
+}
+
+/* Drawn 36px tall inside the 4px track padding; the touch target is 44px. */
+.tab::after {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+
+/* The label clips, not the tab, so the tab's touch target is not clipped with it. */
+.label {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

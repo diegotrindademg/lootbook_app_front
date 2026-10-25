@@ -9,6 +9,7 @@
 
 /* Design: Open Sans 600/11, padding 7px 0. Lifted to 14px (M0, X3), so a segment is 36 tall. */
 .segment {
+  position: relative;
   flex: 1 1 0;
   min-width: 0;
   min-height: 36px;
@@ -36,4 +37,11 @@
 .segment:focus-visible {
   outline: 2px solid var(--color-accent-default);
   outline-offset: 2px;
+}
+
+/* Drawn 36px tall inside the 4px track padding; the touch target is 44px. */
+.segment::after {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
 }
