@@ -67,8 +67,8 @@ export const fakeCharactersApi: CharactersApi = {
     const copy: CharacterSummary = {
       ...source,
       id: `fake-copy-${Date.now().toString(36)}`,
-      // Named the way the back end will name it (favorite-duplicate.md 2.3).
-      name: `${source.name} (copy)`,
+      // The design's wording (01.9), which the back end follows too.
+      name: `${source.name} copy`,
       status: source.status === "ARCHIVED" ? "ACTIVE" : source.status,
       favorite: false,
       updatedAt: new Date().toISOString(),
