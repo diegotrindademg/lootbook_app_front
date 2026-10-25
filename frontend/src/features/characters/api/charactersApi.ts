@@ -10,10 +10,10 @@ export interface CharactersApi {
   archive(id: string): Promise<CharacterSummary>;
   unarchive(id: string): Promise<CharacterSummary>;
   remove(id: string): Promise<void>;
-  /** No endpoint yet. */
+  /** POST /characters/:id/duplicate, a new route (favorite-duplicate.md 3.2). Resolves with the copy. */
   duplicate(source: CharacterSummary): Promise<CharacterSummary>;
-  /** No endpoint yet. */
-  setFavorite(id: string, favorite: boolean): Promise<void>;
+  /** PATCH /characters/:id with the new isFavorite field (favorite-duplicate.md 3.1). */
+  setFavorite(id: string, favorite: boolean): Promise<CharacterSummary>;
 }
 
 export const charactersApi: CharactersApi = DEV_FAKES_ENABLED ? fakeCharactersApi : httpCharactersApi;

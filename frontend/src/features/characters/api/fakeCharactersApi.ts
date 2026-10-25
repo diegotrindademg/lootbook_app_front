@@ -67,15 +67,14 @@ export const fakeCharactersApi: CharactersApi = {
     const copy: CharacterSummary = {
       ...source,
       id: `fake-copy-${Date.now().toString(36)}`,
-      name: `${source.name} copy`,
-      status: "ACTIVE",
+      // Named the way the back end will name it (favorite-duplicate.md 2.3).
+      name: `${source.name} (copy)`,
+      status: source.status === "ARCHIVED" ? "ACTIVE" : source.status,
       favorite: false,
       updatedAt: new Date().toISOString(),
     };
     await writeList([copy, ...(await readList())]);
     return copy;
   },
-  async setFavorite(id, favorite) {
-    await update(id, { favorite });
-  },
+  setFavorite: (id, favorite) => update(id, { favorite }),
 };
