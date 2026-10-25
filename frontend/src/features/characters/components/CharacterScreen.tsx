@@ -62,13 +62,8 @@ export default function CharacterScreen() {
     null,
   );
   const [revealKey, setRevealKey] = useState<string | null>(null);
-  // Archive from Recent can be undone for 6 seconds (Figma 2362:3230).
+  // Archive from Recent can be undone for 6 seconds (Figma 2362:3230); the toast keeps the time.
   const [undoFor, setUndoFor] = useState<CharacterSummary | null>(null);
-  useEffect(() => {
-    if (!undoFor) return;
-    const timer = window.setTimeout(() => setUndoFor(null), 6000);
-    return () => window.clearTimeout(timer);
-  }, [undoFor]);
 
   // The Search tab on other screens links to /?search=1: focus the field once the screen is up.
   useEffect(() => {
@@ -204,7 +199,9 @@ export default function CharacterScreen() {
       {undoFor && !overlayOpen && (
         <div className={styles.toast}>
           <UndoToast
+            key={undoFor.id}
             message={`${undoFor.name} archived`}
+            durationMs={6000}
             onUndo={() => {
               list.actions.unarchive(undoFor);
               setUndoFor(null);
