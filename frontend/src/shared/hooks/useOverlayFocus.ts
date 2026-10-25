@@ -5,6 +5,16 @@ import { useEffect, useRef } from "react";
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+/** Each open overlay and the control that opened it, so an overlay opened from another one (a
+ * dialog chosen from a menu) hands focus back to the original control, not to the vanished item. */
+const openers = new WeakMap<Element, HTMLElement | null>();
+
+function resolveOpener(): HTMLElement | null {
+  const active = document.activeElement as HTMLElement | null;
+  const parentOverlay = active?.closest("[data-overlay-root]");
+  return parentOverlay ? (openers.get(parentOverlay) ?? null) : active;
+}
+
 /**
  * Keyboard behaviour shared by sheets and dialogs: focus moves inside when it opens, Tab stays
  * inside, Escape closes, and focus goes back to whatever opened it.
@@ -13,11 +23,16 @@ export function useOverlayFocus<T extends HTMLElement>(onClose: () => void) {
   const ref = useRef<T>(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
+  // Read during the first render: by the time effects run, the page behind may already be inert,
+  // which takes focus away from the control that opened the overlay.
+  const openerRef = useRef(typeof document === "undefined" ? null : resolveOpener());
 
   useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
+    const opener = openerRef.current;
     const root = ref.current;
     if (!root) return;
+    root.setAttribute("data-overlay-root", "");
+    openers.set(root, opener);
 
     const autoFocus = root.querySelector<HTMLElement>("[data-autofocus]");
     (autoFocus ?? root.querySelector<HTMLElement>(FOCUSABLE))?.focus();
@@ -45,7 +60,10 @@ export function useOverlayFocus<T extends HTMLElement>(onClose: () => void) {
     root.addEventListener("keydown", onKeyDown);
     return () => {
       root.removeEventListener("keydown", onKeyDown);
-      if (opener && document.contains(opener)) opener.focus();
+      // Wait a tick: the page behind is still inert while this overlay is being removed.
+      window.setTimeout(() => {
+        if (opener && document.contains(opener) && !opener.closest("[inert]")) opener.focus();
+      });
     };
   }, []);
 

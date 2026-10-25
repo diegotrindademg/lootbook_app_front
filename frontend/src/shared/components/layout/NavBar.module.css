@@ -85,3 +85,13 @@
   position: absolute;
   inset: -6px 0;
 }
+
+.signIn:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+.profile:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
