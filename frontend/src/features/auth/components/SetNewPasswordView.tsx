@@ -8,7 +8,7 @@ import { useAuthFlow } from "../state/AuthFlowContext";
 import { authNotices, isAuthError, type AuthNotice } from "../utils/authNotices";
 import { announceOnArrival } from "../utils/arrivalNotice";
 import AuthField from "./AuthField";
-import AuthScreen, { AuthFields, AuthForm, AuthRow, TextButton } from "./AuthScreen";
+import AuthScreen, { AuthFields, AuthForm, AuthRow, Strong, TextButton } from "./AuthScreen";
 
 /**
  * The page the reset link opens (plan M0, A4; Figma 2372:2150). Saving ends signed in, back where the
@@ -36,7 +36,7 @@ export default function SetNewPasswordView() {
 
   const submit = async () => {
     if (!password) return setError(authNotices.missing("password"));
-    if (password !== confirm) return setError(authNotices.mismatch());
+    if (password !== confirm) return setError(authNotices.mismatch(true));
 
     setError(null);
     setSubmitting(true);
@@ -72,7 +72,13 @@ export default function SetNewPasswordView() {
   return (
     <AuthScreen
       title="Set a new password"
-      subtitle="Choose a new password for your account."
+      subtitle={
+        <>
+          Choose a new password for{" "}
+          {flow.email.trim() ? <Strong>{flow.email.trim()}</Strong> : "your account"}. You will be
+          signed in when it is saved.
+        </>
+      }
       error={expired ? (error ?? authNotices.linkExpired()) : error}
       backLabel="Back"
       onBack={flow.exit}

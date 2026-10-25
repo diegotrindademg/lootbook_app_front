@@ -44,9 +44,12 @@ export const authNotices = {
   // Not drawn in the design: the plainest version of each.
   missing: (field: AuthField): AuthNotice => ({ title: "Fill in every field", field }),
   invalidEmail: (): AuthNotice => ({ title: "Enter a valid email", field: "email" }),
-  mismatch: (): AuthNotice => ({
+  /** Set a new password uses Figma's wording (2372:2394), create account the plain one. */
+  mismatch: (newPassword = false): AuthNotice => ({
     title: "The passwords do not match",
-    body: "Type the same password in both fields.",
+    body: newPassword
+      ? "Type the same new password in both fields."
+      : "Type the same password in both fields.",
     field: "confirm",
   }),
   failed: (error: unknown): AuthNotice =>
