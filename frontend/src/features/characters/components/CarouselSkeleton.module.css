@@ -1,0 +1,48 @@
+.skeleton {
+  position: relative;
+  flex-shrink: 0;
+  width: 292px;
+  height: 397px;
+  overflow: hidden;
+  border-radius: 65px;
+  background: var(--color-surface-raised);
+}
+
+.infoBar {
+  position: absolute;
+  right: 20px;
+  bottom: 28px;
+  left: 20px;
+  height: 76px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-content-primary) 5%, transparent);
+}
+
+.shimmer {
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-accent-default) 14%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+    transform: translateX(75%);
+  }
+}

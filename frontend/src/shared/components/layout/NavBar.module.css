@@ -2,6 +2,8 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  /* Fixed height so the profile badge (44px) and the Sign in pill never move what sits below. */
+  height: calc(53px + env(safe-area-inset-top));
   padding: calc(11px + env(safe-area-inset-top)) 19px 0 16px;
 }
 

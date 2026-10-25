@@ -4,3 +4,20 @@
   min-height: 100dvh;
   padding-bottom: calc(120px + env(safe-area-inset-bottom));
 }
+
+/* The carousel well: 477px tall in the design, cards centred in it. */
+.well {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 477px;
+  margin-top: 16px;
+  padding: 40px 0;
+}
+
+.wellNotice {
+  width: 100%;
+  padding: 0 20px;
+}

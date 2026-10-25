@@ -1,0 +1,25 @@
+.splash {
+  position: fixed;
+  z-index: 50;
+  inset: 0 auto 0 50%;
+  width: min(100vw, var(--app-column-width));
+  overflow: hidden;
+  background: var(--color-surface-overlay);
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.plate {
+  object-fit: cover;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 75% at 50% 45%,
+    transparent 42%,
+    color-mix(in srgb, var(--color-surface-overlay) 45%, transparent) 100%
+  );
+}

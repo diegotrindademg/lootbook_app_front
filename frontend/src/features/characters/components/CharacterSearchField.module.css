@@ -1,0 +1,42 @@
+.field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 44px;
+  margin: 31px 20px 0;
+  padding: 0 var(--space-4);
+  border: var(--border-width-hairline) solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+  transition: border-color 140ms linear;
+  cursor: text;
+}
+
+.field:focus-within {
+  border-color: color-mix(in srgb, var(--color-accent-default) 55%, transparent);
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--color-content-muted);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-content-primary);
+  caret-color: var(--color-accent-default);
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--color-content-primary) 35%, transparent);
+}
+
+.input::-webkit-search-cancel-button {
+  display: none;
+}
