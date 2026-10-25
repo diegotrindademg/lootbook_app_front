@@ -46,7 +46,15 @@ function userFor(email: string): AuthUser {
   };
 }
 
-let pendingResetEmail = "lucien@example.com";
+const RESET_KEY = "lootbook.dev.fakeResetEmail";
+
+function pendingResetEmail() {
+  try {
+    return window.localStorage.getItem(RESET_KEY) || "lucien@example.com";
+  } catch {
+    return "lucien@example.com";
+  }
+}
 
 export const fakeAuthClient: AuthClient = {
   async signIn(email, password) {
@@ -73,11 +81,16 @@ export const fakeAuthClient: AuthClient = {
   },
   async resetPassword(email) {
     await fakeLatency(LATENCY_MS);
-    pendingResetEmail = email.trim() || pendingResetEmail;
+    try {
+      // The reset link opens a fresh page, so the fake keeps the email where that page can read it.
+      if (email.trim()) window.localStorage.setItem(RESET_KEY, email.trim());
+    } catch {
+      // Storage blocked: the fake signs in as its default account.
+    }
   },
   async setNewPassword() {
     await fakeLatency(LATENCY_MS);
-    const user = userFor(pendingResetEmail);
+    const user = userFor(pendingResetEmail());
     writeUser(user);
     return user;
   },
