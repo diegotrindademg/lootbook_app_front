@@ -1,0 +1,179 @@
+/* Geometry from the design: 292x397 radius 65, glass info bar 256x53 radius 26.5. */
+.card {
+  position: relative;
+  width: 292px;
+  height: 397px;
+  transform: scale(0.822); /* 240 / 292, the peeking neighbours */
+  transition: transform 0.3s ease;
+}
+
+.active {
+  transform: scale(1);
+}
+
+.glow {
+  position: absolute;
+  top: -11px;
+  left: -3px;
+  width: 295px;
+  height: 425px;
+  border-radius: 146px;
+  object-fit: cover;
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.active .glow {
+  opacity: 0.55;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 65px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.face:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 4px;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 65px;
+  background: var(--color-surface-raised);
+}
+
+.art {
+  object-fit: cover;
+  object-position: center top;
+}
+
+.infoBar,
+.info,
+.open,
+.menu,
+.badge {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.active .infoBar,
+.active .info,
+.active .open,
+.active .menu,
+.active .badge {
+  opacity: 1;
+}
+
+.infoBar {
+  position: absolute;
+  top: 327px;
+  left: 18px;
+  width: 256px;
+  height: 53px;
+  border-radius: 26.5px;
+  background: color-mix(in srgb, var(--color-surface-overlay) 50%, transparent);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+.info {
+  position: absolute;
+  top: 334px;
+  left: 29px;
+  display: flex;
+  flex-direction: column;
+  width: 186px;
+}
+
+.name,
+.subtitle {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  line-height: 19px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.name {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-content-primary);
+}
+
+.subtitle {
+  color: var(--color-content-secondary);
+}
+
+.open {
+  position: absolute;
+  top: 334px;
+  left: 221px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 26.5px;
+  background: color-mix(in srgb, var(--color-surface-overlay) 50%, transparent);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  color: var(--color-content-primary);
+}
+
+.menu {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-surface-overlay) 45%, transparent);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  color: var(--color-content-primary);
+  cursor: pointer;
+}
+
+/* Drawn 36px; the touch target is 44px. */
+.menu::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+
+.menu:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+.card:not(.active) .menu {
+  visibility: hidden;
+}
+
+.badge {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-surface-overlay) 55%, transparent);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 19px;
+  color: var(--color-accent-default);
+}

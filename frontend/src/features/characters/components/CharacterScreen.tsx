@@ -8,9 +8,13 @@ import TabBar from "@/shared/components/layout/TabBar";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
 import { useCharacterList } from "../hooks/useCharacterList";
 import { useLaunchSplash } from "../hooks/useLaunchSplash";
+import { SAMPLE_CHARACTER } from "../data/sampleCharacter";
 import type { CharacterListTab } from "../types";
 import CarouselSkeleton from "./CarouselSkeleton";
+import CharacterCard from "./CharacterCard";
+import CharacterCarousel from "./CharacterCarousel";
 import CharacterSearchField from "./CharacterSearchField";
+import EmptyCharacterCard from "./EmptyCharacterCard";
 import ListTabs from "./ListTabs";
 import SplashScreen from "./SplashScreen";
 import styles from "./CharacterScreen.module.css";
@@ -45,6 +49,30 @@ export default function CharacterScreen() {
           onAction={list.reload}
         />
       </div>
+    );
+  } else if (list.characters.length === 0) {
+    // S3 signed out and S4 signed in: create a character, or look at the sample.
+    well = (
+      <CharacterCarousel
+        slides={[
+          {
+            key: "create",
+            render: () => <EmptyCharacterCard label="Create new character" href="/characters/create" />,
+          },
+          {
+            key: SAMPLE_CHARACTER.id,
+            render: (active) => (
+              <CharacterCard
+                name={SAMPLE_CHARACTER.name}
+                subtitle={SAMPLE_CHARACTER.subtitle}
+                imageUrl={SAMPLE_CHARACTER.imageUrl}
+                active={active}
+                badge="Sample"
+              />
+            ),
+          },
+        ]}
+      />
     );
   }
 
