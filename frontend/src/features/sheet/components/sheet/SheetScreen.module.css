@@ -109,8 +109,16 @@ button.circle::after {
 }
 
 /* Contract v1.1, 2: the sample is read only, and says so where Edit and the heart would be. */
+/*
+ * Figma "Sheet button", kind Sample (2398:7075): solid Surface/Ink with a 1px Line/Strip ring and teal text,
+ * so it reads over any art (teal on ink is 9.8:1; review F5). 40 high, padding 0 16, a 4px blur.
+ */
 .samplePill {
   right: 24px;
+  border: var(--border-width-hairline) solid color-mix(in srgb, var(--color-accent-default) 35%, transparent);
+  background: var(--color-content-on-gradient);
+  backdrop-filter: blur(4px);
+  color: var(--color-accent-default);
   cursor: default;
 }
 
