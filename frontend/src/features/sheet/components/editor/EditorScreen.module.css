@@ -57,13 +57,16 @@
   outline-offset: 2px;
 }
 
-/* Design: right 20, top 80 (56 here), max-width 200, Open Sans 11/15. Lifted to 14px (M0, X3). */
+/*
+ * Figma "Editor top" (2394:4670): under the name's underline, right-aligned, y 146 (122 here), 14/19.
+ * The source put it under the Save pill at 11px; at 14px it ran into the name (review F1).
+ */
 .saveHint {
   position: absolute;
-  top: calc(56px + env(safe-area-inset-top));
+  top: calc(122px + env(safe-area-inset-top));
   right: 20px;
+  left: 20px;
   z-index: 10;
-  max-width: 200px;
   margin: 0;
   font-size: var(--font-size-sm);
   line-height: 19px;
