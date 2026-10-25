@@ -12,6 +12,7 @@ import InlineNotice from "@/shared/components/ui/InlineNotice";
 import UndoToast from "@/shared/components/ui/UndoToast";
 import { useCharacterList } from "../hooks/useCharacterList";
 import { useLaunchSplash } from "../hooks/useLaunchSplash";
+import { SAMPLE_SHEET_PATH } from "@/features/sheet/data/sampleSheet";
 import { SAMPLE_CHARACTER } from "../data/sampleCharacter";
 import type { CharacterListTab, CharacterSummary } from "../types";
 import { emptyLabel, filterCharacters } from "../utils/filterCharacters";
@@ -38,6 +39,7 @@ const sampleSlide: CarouselSlide = {
       name={SAMPLE_CHARACTER.name}
       subtitle={SAMPLE_CHARACTER.subtitle}
       imageUrl={SAMPLE_CHARACTER.imageUrl}
+      href={SAMPLE_SHEET_PATH}
       active={active}
       badge="Sample"
     />

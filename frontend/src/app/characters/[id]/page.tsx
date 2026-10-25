@@ -1,5 +1,6 @@
-import PlaceholderScreen from "@/shared/components/layout/PlaceholderScreen";
+import SheetScreen from "@/features/sheet/components/sheet/SheetScreen";
 
-export default function CharacterSheetPage() {
-  return <PlaceholderScreen title="Character sheet" activeTab="characters" createHref="/characters/create" />;
+export default async function CharacterSheetPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <SheetScreen characterId={id} />;
 }

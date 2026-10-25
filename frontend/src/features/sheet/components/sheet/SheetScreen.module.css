@@ -1,0 +1,313 @@
+/*
+ * Design `CharacterDetailScreen`, 375 x 812, without the design's status bar: every top is 24px
+ * higher than in the frame, as on the first slice's screens (buttons 55 -> 31, panel 296 -> 272).
+ */
+.column {
+  height: 100dvh;
+  min-height: 0;
+}
+
+.screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--color-surface-page-top) 0%, var(--color-surface-page-bottom) 100%);
+}
+
+.art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: height 450ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Panel raised: the art keeps 340 of the frame (316 here). */
+.artCropped {
+  height: calc(316px + env(safe-area-inset-top));
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A character with no portrait: the design's plain #202020. */
+.noImage {
+  width: 100%;
+  height: 100%;
+  background: #202020;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(11 13 19 / 55%) 0%, rgb(11 13 19 / 0%) 34%);
+  pointer-events: none;
+}
+
+/* Design CIRCLE: 40, white at .12 with an 8px blur, top 55 (31 here). */
+.circle {
+  position: absolute;
+  top: calc(31px + env(safe-area-inset-top));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 12%);
+  backdrop-filter: blur(8px);
+  color: var(--color-content-primary);
+  cursor: pointer;
+}
+
+/* Drawn 40px; the touch target is 44px. */
+button.circle::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+
+.circle:focus-visible,
+.grabber:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+.back {
+  left: 24px;
+}
+
+.favorite {
+  right: 24px;
+}
+
+.heartOn {
+  color: var(--color-accent-default);
+}
+
+/* Design: the same circle as a pill, right 72, Open Sans 600/13 (lifted to 14px). */
+.edit,
+.samplePill {
+  width: auto;
+  padding: 0 16px;
+  border-radius: 20px;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.edit {
+  right: 72px;
+}
+
+/* Contract v1.1, 2: the sample is read only, and says so where Edit and the heart would be. */
+.samplePill {
+  right: 24px;
+  cursor: default;
+}
+
+/* Design: left and right 20, top 104 (80 here). */
+.banner {
+  position: absolute;
+  top: calc(80px + env(safe-area-inset-top));
+  right: 20px;
+  left: 20px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-default);
+}
+
+.loadError {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Panel down: the identity band, 128 tall (94 with the name alone), blurred, a grabber at top 8. */
+.band {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  min-height: calc(94px + env(safe-area-inset-bottom));
+  padding: 14px 24px env(safe-area-inset-bottom);
+  background: rgb(11 13 19 / 72%);
+  backdrop-filter: blur(12px);
+  touch-action: none;
+  cursor: grab;
+}
+
+.bandTall {
+  min-height: calc(128px + env(safe-area-inset-bottom));
+}
+
+/* Design: 48 x 6, white at .7. A button so the keyboard can raise and lower the panel. */
+.grabber {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 48px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 70%);
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.grabber::after {
+  content: "";
+  position: absolute;
+  inset: -19px -10px;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Design: Open Sans 700/11, .16em, teal. Lifted to 14px (M0, X3). */
+.eyebrow {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-accent-default);
+}
+
+.name {
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-family-display);
+  font-size: 28px;
+  font-weight: var(--font-weight-regular);
+  line-height: 34px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Design: Open Sans 13/18, #C8CCD3. */
+.subtitle {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  line-height: 19px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #c8ccd3;
+}
+
+/* Panel raised: top 296 (272 here), #101316, top radius 24. */
+.panel {
+  position: absolute;
+  top: calc(272px + env(safe-area-inset-top));
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  background: var(--color-content-on-gradient);
+  box-shadow: 0 -20px 40px rgb(0 0 0 / 35%);
+  animation: panelIn 450ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.panelHead {
+  position: relative;
+  padding: 30px 20px 0;
+  touch-action: none;
+  cursor: grab;
+}
+
+.rule {
+  height: 1px;
+  margin-top: 14px;
+  background: var(--color-border-glass);
+}
+
+/* Design: scrolls, padding 16px 20px 28px, gap 14. */
+.panelBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  padding: 16px 20px calc(28px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.noBlocks {
+  margin: 0;
+  padding: 28px 20px;
+  border: var(--border-width-hairline) dashed color-mix(in srgb, var(--color-content-primary) 12%, transparent);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  text-align: center;
+  color: var(--color-content-subtle);
+}
+
+@keyframes panelIn {
+  from {
+    transform: translateY(40%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art,
+  .panel {
+    transition: none;
+    animation: none;
+  }
+}
+
+.panelHead .grabber {
+  top: 10px;
+}

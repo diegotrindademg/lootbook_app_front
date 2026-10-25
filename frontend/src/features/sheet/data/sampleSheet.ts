@@ -1,4 +1,4 @@
-import type { SheetBlock } from "../types";
+import type { CharacterSheet, SheetBlock } from "../types";
 
 /**
  * The sample character's blocks (plan M0, S6), from the design's "Rafa Delgado": a sheet with no
@@ -52,3 +52,15 @@ export const SAMPLE_BLOCKS: SheetBlock[] = [
       "Never the same car twice. Never park facing a wall. Never ask what is in the bag, knowing is what gets you asked to carry it again.",
   },
 ];
+
+/** The sample character's sheet, opened from the sample card on the empty list, read only. */
+export const SAMPLE_SHEET: CharacterSheet = {
+  id: "sample",
+  name: "Rafa Delgado",
+  imageUrl: "/images/charles_lourance.png",
+  favorite: false,
+  revision: 0,
+  blocks: SAMPLE_BLOCKS,
+};
+
+export const SAMPLE_SHEET_PATH = "/characters/sample";
