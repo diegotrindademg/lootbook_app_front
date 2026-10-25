@@ -26,10 +26,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${acme.variable} ${openSans.variable} antialiased`}
-      >
+    // The font variables sit on <html> so the type tokens on :root (styles/tokens) can read them;
+    // on <body> they were out of reach and every page fell back to the system font.
+    <html lang="en" className={`${acme.variable} ${openSans.variable}`} suppressHydrationWarning>
+      <body className="antialiased">
         <AuthSessionProvider>{children}</AuthSessionProvider>
       </body>
     </html>
