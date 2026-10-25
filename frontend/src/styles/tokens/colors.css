@@ -73,4 +73,9 @@
   --color-feedback-error: #ff3333;
   --color-feedback-error-subtle: #ff3333;
   --color-feedback-error-strong: #cc0000;
+
+  /* Added for the v1 screens, values from the Figma variables (file cRD8blrS4BIIQ01JC4GuTN). */
+  --color-gradient-greenblue-start: #24e191;
+  --color-gradient-greenblue-end: #65e3ff;
+  --color-border-glass: rgb(255 255 255 / 10%);
 }

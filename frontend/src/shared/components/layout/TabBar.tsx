@@ -22,9 +22,10 @@ type TabBarProps = {
 };
 
 /**
- * The floating tab bar (design S7): Characters, Equipments, Create, Settings, Search.
- * The design labels every tab at 10px; at the 14px floor four labels do not fit beside Create, so
- * only the current tab shows its label and the others carry it as their accessible name.
+ * The floating tab bar (design S7, Figma "Tab bar" 2352:2360): four equal slots with Create exactly in
+ * the centre, so it never moves between screens. Labels are 14px, which does not fit four slots, so
+ * only the current tab shows its label (it may run past its slot); the others are icon only and carry
+ * their name as the accessible name.
  */
 export default function TabBar({ activeId, createHref, onSearch, hidden = false }: TabBarProps) {
   const tab = (item: TabItem) => {
@@ -33,7 +34,7 @@ export default function TabBar({ activeId, createHref, onSearch, hidden = false 
       <Link
         key={item.id}
         href={item.href}
-        className={active ? `${styles.tab} ${styles.tabActive}` : styles.tab}
+        className={active ? `${styles.slot} ${styles.active}` : styles.slot}
         aria-label={active ? undefined : item.label}
         aria-current={active ? "page" : undefined}
       >
@@ -43,15 +44,6 @@ export default function TabBar({ activeId, createHref, onSearch, hidden = false 
     );
   };
 
-  const searchActive = activeId === "search";
-  const searchClass = searchActive ? `${styles.tab} ${styles.tabActive}` : styles.tab;
-  const searchContent = (
-    <>
-      <Icon name="search" size={22} />
-      {searchActive && <span className={styles.label}>Search</span>}
-    </>
-  );
-
   return (
     <nav
       className={hidden ? `${styles.tabBar} ${styles.hidden}` : styles.tabBar}
@@ -60,17 +52,19 @@ export default function TabBar({ activeId, createHref, onSearch, hidden = false 
       inert={hidden || undefined}
     >
       {LEFT.map(tab)}
-      <Link href={createHref} className={styles.create} aria-label="Create">
-        <Icon name="plus" size={26} strokeWidth={3} />
-      </Link>
+      <div className={styles.createSlot}>
+        <Link href={createHref} className={styles.create} aria-label="Create">
+          <Icon name="plus" size={26} strokeWidth={3} />
+        </Link>
+      </div>
       {tab(SETTINGS)}
       {onSearch ? (
-        <button type="button" className={searchClass} aria-label="Search" onClick={onSearch}>
-          {searchContent}
+        <button type="button" className={styles.slot} aria-label="Search" onClick={onSearch}>
+          <Icon name="search" size={22} />
         </button>
       ) : (
-        <Link href="/?search=1" className={searchClass} aria-label="Search">
-          {searchContent}
+        <Link href="/?search=1" className={styles.slot} aria-label="Search">
+          <Icon name="search" size={22} />
         </Link>
       )}
     </nav>

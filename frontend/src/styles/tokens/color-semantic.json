@@ -11,12 +11,15 @@
       "default": { "$value": "{color.teal.50}" }, "hover": { "$value": "{color.teal.40}" }, "pressed": { "$value": "{color.teal.60}" }, "muted": { "$value": "{color.teal.70}" }, "subtle": { "$value": "{color.teal.80}" }
     },
     "border": {
-      "subtle": { "$value": "rgba(255, 255, 255, 0.08)" }, "default": { "$value": "rgba(255, 255, 255, 0.15)" }, "strong": { "$value": "{color.neutral.80}" }, "accent": { "$value": "{color.teal.50}" }
+      "subtle": { "$value": "rgba(255, 255, 255, 0.08)" }, "default": { "$value": "rgba(255, 255, 255, 0.15)" }, "strong": { "$value": "{color.neutral.80}" }, "accent": { "$value": "{color.teal.50}" }, "glass": { "$value": "rgba(255, 255, 255, 0.1)" }
     },
     "feedback": {
       "success": { "$value": "{color.feedback.success.2}" }, "success-subtle": { "$value": "{color.feedback.success.1}" }, "success-strong": { "$value": "{color.feedback.success.3}" },
       "warning": { "$value": "{color.feedback.warning.2}" }, "warning-subtle": { "$value": "{color.feedback.warning.1}" }, "warning-strong": { "$value": "{color.feedback.warning.3}" },
       "error": { "$value": "{color.feedback.error.1}" }, "error-subtle": { "$value": "{color.feedback.error.1}" }, "error-strong": { "$value": "{color.feedback.error.3}" }
+    },
+    "gradient": {
+      "greenblue-start": { "$value": "#24E191" }, "greenblue-end": { "$value": "#65E3FF" }
     }
   }
 }
