@@ -1,6 +1,7 @@
 
 import type { Metadata } from "next";
 import { Acme, Open_Sans } from "next/font/google";
+import ArrivalNotice from "@/features/auth/components/ArrivalNotice";
 import { AuthSessionProvider } from "@/features/auth/state/AuthSessionContext";
 import "./globals.css";
 
@@ -30,7 +31,10 @@ export default function RootLayout({
     // on <body> they were out of reach and every page fell back to the system font.
     <html lang="en" className={`${acme.variable} ${openSans.variable}`} suppressHydrationWarning>
       <body className="antialiased">
-        <AuthSessionProvider>{children}</AuthSessionProvider>
+        <AuthSessionProvider>
+          {children}
+          <ArrivalNotice />
+        </AuthSessionProvider>
       </body>
     </html>
   );

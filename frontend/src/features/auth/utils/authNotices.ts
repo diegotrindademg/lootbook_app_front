@@ -35,6 +35,12 @@ export const authNotices = {
     field: "email",
   }),
 
+  /** Figma 2372:2469: the reset link no longer works. */
+  linkExpired: (): AuthNotice => ({
+    title: "That link has expired",
+    body: "Reset links only work for a while. Send yourself a new one.",
+  }),
+
   // Not drawn in the design: the plainest version of each.
   missing: (field: AuthField): AuthNotice => ({ title: "Fill in every field", field }),
   invalidEmail: (): AuthNotice => ({ title: "Enter a valid email", field: "email" }),

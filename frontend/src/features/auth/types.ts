@@ -12,6 +12,7 @@ export type AuthErrorCode =
   | "wrong-password"
   | "no-account"
   | "email-taken"
+  | "link-expired"
   | "network"
   | "not-connected"
   | "unknown";

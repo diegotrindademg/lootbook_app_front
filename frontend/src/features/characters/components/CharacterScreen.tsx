@@ -9,6 +9,7 @@ import AppColumn from "@/shared/components/layout/AppColumn";
 import NavBar from "@/shared/components/layout/NavBar";
 import TabBar from "@/shared/components/layout/TabBar";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
+import UndoToast from "@/shared/components/ui/UndoToast";
 import { useCharacterList } from "../hooks/useCharacterList";
 import { useLaunchSplash } from "../hooks/useLaunchSplash";
 import { SAMPLE_CHARACTER } from "../data/sampleCharacter";
@@ -61,6 +62,13 @@ export default function CharacterScreen() {
     null,
   );
   const [revealKey, setRevealKey] = useState<string | null>(null);
+  // Archive from Recent can be undone for 6 seconds (Figma 2362:3230).
+  const [undoFor, setUndoFor] = useState<CharacterSummary | null>(null);
+  useEffect(() => {
+    if (!undoFor) return;
+    const timer = window.setTimeout(() => setUndoFor(null), 6000);
+    return () => window.clearTimeout(timer);
+  }, [undoFor]);
 
   // The Search tab on other screens links to /?search=1: focus the field once the screen is up.
   useEffect(() => {
@@ -94,7 +102,14 @@ export default function CharacterScreen() {
       },
       archived
         ? { label: "Unarchive", icon: "archive", onSelect: () => list.actions.unarchive(character) }
-        : { label: "Archive", icon: "archive", onSelect: () => list.actions.archive(character) },
+        : {
+            label: "Archive",
+            icon: "archive",
+            onSelect: () => {
+              list.actions.archive(character);
+              if (tab === "Recent") setUndoFor(character);
+            },
+          },
       {
         label: "Delete",
         icon: "trash",
@@ -185,6 +200,19 @@ export default function CharacterScreen() {
         onSearch={() => searchRef.current?.focus()}
         hidden={searchFocused || overlayOpen}
       />
+
+      {undoFor && !overlayOpen && (
+        <div className={styles.toast}>
+          <UndoToast
+            message={`${undoFor.name} archived`}
+            onUndo={() => {
+              list.actions.unarchive(undoFor);
+              setUndoFor(null);
+            }}
+            onDismiss={() => setUndoFor(null)}
+          />
+        </div>
+      )}
 
       {list.failure && (
         <div className={styles.failure}>

@@ -11,6 +11,7 @@ import type { AuthClient } from "./authClient";
  * - email starting with `nobody`             -> "No account for that email"
  * - create account with an email `taken...`  -> "That email already has an account"
  * - email starting with `empty`              -> signs in to an account with no characters
+ * - /set-new-password?expired=1              -> "That link has expired"
  * - anything else                            -> signs in to an account with the fake list
  */
 const STORAGE_KEY = "lootbook.dev.fakeAuthUser";
@@ -87,6 +88,9 @@ export const fakeAuthClient: AuthClient = {
     } catch {
       // Storage blocked: the fake signs in as its default account.
     }
+  },
+  async checkResetLink() {
+    return new URLSearchParams(window.location.search).get("expired") === "1" ? "expired" : "valid";
   },
   async setNewPassword() {
     await fakeLatency(LATENCY_MS);

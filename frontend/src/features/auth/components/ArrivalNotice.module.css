@@ -1,0 +1,9 @@
+/* Figma 2372:2198: 335 wide, 20 from each edge, top 98 in the frame (74 without its status bar). */
+.arrival {
+  position: fixed;
+  z-index: 25;
+  top: calc(74px + env(safe-area-inset-top));
+  left: 50%;
+  width: calc(min(100vw, var(--app-column-width)) - 40px);
+  transform: translateX(-50%);
+}

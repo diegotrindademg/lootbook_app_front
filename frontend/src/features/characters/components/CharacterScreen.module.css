@@ -31,3 +31,13 @@
   width: calc(min(100vw, var(--app-column-width)) - 40px);
   transform: translateX(-50%);
 }
+
+/* The Undo toast: 4 above the tab bar (Figma 2362:3230: toast at 662, bar at 718, 52 tall). */
+.toast {
+  position: fixed;
+  z-index: 20;
+  bottom: calc(98px + env(safe-area-inset-bottom));
+  left: 50%;
+  width: calc(min(100vw, var(--app-column-width)) - 40px);
+  transform: translateX(-50%);
+}

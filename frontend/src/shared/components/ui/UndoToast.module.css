@@ -1,0 +1,87 @@
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 8px 0 16px;
+  border-radius: 26px;
+  background: var(--color-surface-raised);
+  filter: drop-shadow(0 18px 20px color-mix(in srgb, black 50%, transparent));
+  color: var(--color-content-primary);
+  animation: toastIn 220ms ease;
+}
+
+.message {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.undo {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--color-accent-default) 9%, transparent);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent-default);
+  cursor: pointer;
+}
+
+.dismiss {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+  color: var(--color-content-muted);
+  cursor: pointer;
+}
+
+/* Drawn 36 and 32px; the touch targets are 44px. */
+.undo::after,
+.dismiss::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+.undo:focus-visible,
+.dismiss:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}

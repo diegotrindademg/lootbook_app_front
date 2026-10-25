@@ -17,7 +17,9 @@ export interface AuthClient {
   signInWithProvider(provider: AuthProvider): Promise<AuthUser | null>;
   /** Sends the reset link. Never says whether the email has an account. */
   resetPassword(email: string): Promise<void>;
-  /** Called from the page the reset link opens; ends signed in. */
+  /** Whether the reset link that opened the page can still be used. */
+  checkResetLink(): Promise<"valid" | "expired">;
+  /** Called from the page the reset link opens; ends signed in. Rejects with "link-expired". */
   setNewPassword(password: string): Promise<AuthUser>;
   signOut(): Promise<void>;
   currentUser(): Promise<AuthUser | null>;
@@ -31,8 +33,8 @@ const notConnected = () => Promise.reject(new AuthError("not-connected"));
 
 /**
  * TODO(Kerley): the Supabase version of AuthClient goes here (supabase-js `auth.signInWithPassword`,
- * `signUp`, `resend`, `signInWithOAuth`, `resetPasswordForEmail`, `updateUser`, `signOut`,
- * `getSession`, `onAuthStateChange`). Until then every call fails with "not-connected", the list is
+ * `signUp`, `resend`, `signInWithOAuth`, `resetPasswordForEmail`, the recovery session the reset
+ * link opens with, `updateUser`, `signOut`, `getSession`, `onAuthStateChange`). Until then every call fails with "not-connected", the list is
  * read without a token (a development back end answers as its guest user), and the screens still render.
  */
 const notConnectedAuthClient: AuthClient = {
@@ -41,6 +43,7 @@ const notConnectedAuthClient: AuthClient = {
   resendConfirmation: notConnected,
   signInWithProvider: notConnected,
   resetPassword: notConnected,
+  checkResetLink: async () => "valid",
   setNewPassword: notConnected,
   signOut: async () => undefined,
   currentUser: async () => null,
