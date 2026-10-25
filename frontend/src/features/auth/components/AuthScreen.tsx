@@ -45,7 +45,8 @@ export default function AuthScreen({
         {!compact && (
           <div className={styles.badgeRow} aria-hidden="true">
             {badge === "goblin" ? (
-              <GoblinSymbol className={styles.goblin} />
+              // The SVG loader drops the viewBox, so it is given back here to let the mark scale.
+              <GoblinSymbol className={styles.goblin} viewBox="0 0 48 42" />
             ) : (
               <span className={styles.circle}>
                 <Icon name={badge} size={30} />
