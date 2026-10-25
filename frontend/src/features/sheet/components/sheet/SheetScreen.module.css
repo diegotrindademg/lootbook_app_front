@@ -162,7 +162,7 @@ button.circle::after {
   display: flex;
   align-items: center;
   min-height: calc(94px + env(safe-area-inset-bottom));
-  padding: 14px 24px env(safe-area-inset-bottom);
+  padding: 0 24px env(safe-area-inset-bottom);
   background: rgb(11 13 19 / 72%);
   backdrop-filter: blur(12px);
   touch-action: none;
