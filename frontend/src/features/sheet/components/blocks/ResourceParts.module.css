@@ -1,0 +1,123 @@
+.step {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+/* The touch target is 44px whatever the drawn size. */
+.step::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+.step:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.plus {
+  border: none;
+  background: color-mix(in srgb, var(--color-accent-default) 85%, transparent);
+  color: var(--color-content-on-gradient);
+}
+
+.plus:active:not(:disabled) {
+  background: var(--color-accent-default);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--color-accent-default) 25%, transparent),
+    0 0 16px color-mix(in srgb, var(--color-accent-default) 50%, transparent);
+}
+
+.minus {
+  border: var(--border-width-default) solid color-mix(in srgb, var(--color-content-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+  color: var(--color-content-primary);
+}
+
+.minus:active:not(:disabled) {
+  background: color-mix(in srgb, var(--color-content-primary) 14%, transparent);
+}
+
+.step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.step:focus-visible,
+.pipButton:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+.gauge {
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-content-primary) 8%, transparent);
+}
+
+.gaugeFill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--color-gradient-greenblue-start), var(--color-gradient-greenblue-end));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent-default) 55%, transparent);
+  transition: width 220ms ease;
+}
+
+.pips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.pipButton {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+.pipButton::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--pitch);
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+.pip {
+  display: block;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  border: var(--border-width-default) solid color-mix(in srgb, var(--color-content-primary) 30%, transparent);
+  border-radius: 50%;
+}
+
+.filled {
+  border-color: var(--color-accent-default);
+  background: var(--color-accent-default);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-default) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gaugeFill,
+  .step {
+    transition: none;
+  }
+}

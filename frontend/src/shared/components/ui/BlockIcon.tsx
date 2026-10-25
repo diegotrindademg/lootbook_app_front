@@ -56,10 +56,12 @@ type BlockIconProps = {
   size?: number;
   strokeWidth?: number;
   className?: string;
+  /** Heart and star are filled unless this says otherwise (the favourite heart when off). */
+  filled?: boolean;
 };
 
-export default function BlockIcon({ icon, size = 20, strokeWidth = 2, className }: BlockIconProps) {
-  const filled = icon === "heart" || icon === "star";
+export default function BlockIcon({ icon, size = 20, strokeWidth = 2, className, filled: fill }: BlockIconProps) {
+  const filled = fill ?? (icon === "heart" || icon === "star");
   return (
     <svg
       className={className}

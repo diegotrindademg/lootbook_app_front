@@ -1,0 +1,368 @@
+/* The five blocks as they show on the sheet. Every design size under 14px is lifted to 14 (M0, X3). */
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.empty {
+  margin: 0;
+  padding: 16px;
+  border: var(--border-width-hairline) dashed color-mix(in srgb, var(--color-content-primary) 12%, transparent);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  color: var(--color-content-subtle);
+}
+
+.nothing {
+  font-style: italic;
+  color: var(--color-content-subtle);
+}
+
+/* Stat set: 3 columns, gap 8; card padding 12px 10px, 1.5px teal, radius 16. */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 10px;
+  border: var(--border-width-default) solid var(--color-accent-default);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+}
+
+/* Design: Open Sans 600/10, .14em. */
+.statAbbr {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 18px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-content-subtle);
+}
+
+.statValue {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-3xl);
+  line-height: 1.15;
+}
+
+/* Design: padding 2px 8px, Acme 13; a spacer when there is no derived value. */
+.derivedPill {
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-accent-default) 9.4%, transparent);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-sm);
+  line-height: 18px;
+  color: var(--color-accent-default);
+}
+
+.derivedSpacer {
+  height: 20px;
+}
+
+/* Resource: column gap 12, padding 16, hairline, radius 16. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+}
+
+.resourceHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Design: Open Sans 600/11, .12em, uppercase. */
+.resourceTitle {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-content-subtle);
+}
+
+.readout {
+  flex-shrink: 0;
+  font-family: var(--font-family-display);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.readoutMax {
+  font-size: var(--font-size-md);
+  color: var(--color-content-subtle);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.steps {
+  display: flex;
+  gap: 10px;
+}
+
+/* Design: Open Sans 11. */
+.resetNote {
+  font-size: var(--font-size-sm);
+  line-height: 19px;
+  color: var(--color-content-subtle);
+}
+
+.tiers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tier {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Design: 64 wide, Open Sans 600/13. */
+.tierLabel {
+  flex-shrink: 0;
+  width: 64px;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* List: rows gap 8; row padding 14px 16px, hairline, radius 16, gap 12. */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+}
+
+.check {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: var(--border-width-default) solid color-mix(in srgb, var(--color-content-primary) 30%, transparent);
+  border-radius: 6px;
+  color: var(--color-content-on-gradient);
+}
+
+.checked {
+  border-color: var(--color-accent-default);
+  background: var(--color-accent-default);
+}
+
+.listCopy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.listName {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Design: Open Sans 11. */
+.listNote {
+  font-size: var(--font-size-sm);
+  line-height: 19px;
+  color: var(--color-content-subtle);
+}
+
+/* Design: Acme 13, padding 3px 10px. */
+.valuePill {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-accent-default) 9.4%, transparent);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-sm);
+  line-height: 18px;
+  color: var(--color-accent-default);
+}
+
+/* Text: header padding 14px 16px, title 600/14, chevron 18 turning in 200ms; body 14/22. */
+.textCard {
+  overflow: hidden;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+}
+
+.textHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 16px;
+  border: none;
+  background: none;
+  color: var(--color-content-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.textHead:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+.textTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.chevron {
+  display: flex;
+  color: var(--color-content-subtle);
+  transition: transform 200ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.textBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px 16px;
+  font-size: var(--font-size-sm);
+  line-height: 22px;
+  color: #d5d8de;
+}
+
+.textBody p {
+  margin: 0;
+}
+
+/* Choice, free text: padding 16, Open Sans 15/22. */
+.prose {
+  margin: 0;
+  padding: 16px;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+  font-size: 15px;
+  line-height: 22px;
+}
+
+/* Choice, picked: min-height 102, art at .55 under a gradient, copy right-aligned over art. */
+.optionCard {
+  position: relative;
+  min-height: 102px;
+  overflow: hidden;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+}
+
+.optionArt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+}
+
+.optionShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(21 22 23 / 20%) 0%, rgb(21 22 23 / 92%) 60%);
+}
+
+.optionCopy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.optionCopyArt {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.optionName {
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Design: Open Sans 13/19, max-width 240. */
+.optionDescription {
+  max-width: 240px;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  color: #c8ccd3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}

@@ -1,0 +1,177 @@
+/* Design: column gap 10, padding 14, a teal border at .35, radius 20, a faint teal wash and glow. */
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: var(--border-width-hairline) solid color-mix(in srgb, var(--color-accent-default) 35%, transparent);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-accent-default) 7%, transparent) 0%, transparent 70%),
+    var(--color-surface-sunken);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--color-accent-default) 8%, transparent);
+}
+
+/* Design: Open Sans 700/10, .16em, teal, a 12px pin. Lifted to 14px (M0, X3). */
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-default);
+}
+
+.gaugeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gaugeHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gaugeTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.gaugeReadout {
+  font-family: var(--font-family-display);
+  font-size: 26px;
+  line-height: 1;
+}
+
+.max {
+  font-size: 15px;
+  color: var(--color-content-subtle);
+}
+
+.gaugeLine {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gaugeBar {
+  flex: 1;
+}
+
+.tiles {
+  display: flex;
+  gap: 8px;
+}
+
+/* Design `CompactTile`: padding 10px 12px, radius 12, white at .04 with a .06 border. */
+.tile {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: var(--border-width-hairline) solid color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-content-primary) 4%, transparent);
+}
+
+/* Design: Open Sans 600/10, .12em, uppercase. */
+.tileCaption {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-content-subtle);
+}
+
+.tileNumber {
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.tileNumber .max {
+  font-size: var(--font-size-sm);
+}
+
+.itemsWord {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-content-subtle);
+}
+
+.counter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.counterSteps {
+  display: flex;
+  gap: 18px;
+}
+
+.choice {
+  overflow: hidden;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-md);
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Design: Open Sans 12/16. */
+.tileText {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #d5d8de;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.statValue {
+  font-family: var(--font-family-display);
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Design: Open Sans 9. */
+.statAbbr {
+  font-size: var(--font-size-sm);
+  line-height: 18px;
+  letter-spacing: 0.06em;
+  color: var(--color-content-subtle);
+}
