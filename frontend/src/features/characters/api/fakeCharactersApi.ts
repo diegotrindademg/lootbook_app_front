@@ -50,6 +50,9 @@ async function update(id: string, change: Partial<CharacterSummary>) {
   return updated;
 }
 
+/** DEV ONLY. The same fake list, for the fake sheet adapter: a saved new character joins it. */
+export const fakeCharacterList = { read: readList, write: writeList };
+
 export const fakeCharactersApi: CharactersApi = {
   async list() {
     await fakeLatency(LIST_LATENCY_MS);
