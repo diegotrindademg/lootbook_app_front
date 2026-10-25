@@ -1,0 +1,60 @@
+import { AuthError } from "../types";
+
+export type AuthField = "email" | "password" | "confirm";
+
+/** An error shown in place on a sign-in screen, and the field it points at. */
+export type AuthNotice = {
+  title: string;
+  body?: string;
+  actionLabel?: string;
+  onAction?: () => void;
+  field?: AuthField;
+};
+
+/** Copy of the three drawn errors (05.6 to 05.8), with commas where the design has dashes. */
+export const authNotices = {
+  wrongPassword: (onReset: () => void): AuthNotice => ({
+    title: "That password does not match",
+    body: "Try again, or send yourself a reset link.",
+    actionLabel: "Reset",
+    onAction: onReset,
+    field: "password",
+  }),
+  noAccount: (hasDraft: boolean, onCreate: () => void): AuthNotice => ({
+    title: "No account for that email",
+    body: hasDraft ? "Create one instead, your draft comes with you." : "Create one instead.",
+    actionLabel: "Create",
+    onAction: onCreate,
+    field: "email",
+  }),
+  emailTaken: (hasDraft: boolean, onSignIn: () => void): AuthNotice => ({
+    title: "That email already has an account",
+    body: hasDraft ? "Sign in and this draft joins the characters already on it." : "Sign in instead.",
+    actionLabel: "Sign in",
+    onAction: onSignIn,
+    field: "email",
+  }),
+
+  // Not drawn in the design: the plainest version of each.
+  missing: (field: AuthField): AuthNotice => ({ title: "Fill in every field", field }),
+  invalidEmail: (): AuthNotice => ({ title: "Enter a valid email", field: "email" }),
+  mismatch: (): AuthNotice => ({
+    title: "The passwords do not match",
+    body: "Type the same password in both fields.",
+    field: "confirm",
+  }),
+  failed: (error: unknown): AuthNotice =>
+    error instanceof AuthError && error.code === "not-connected"
+      ? { title: "Sign-in is not connected yet", body: "This build has no sign-in service behind it." }
+      : { title: "Could not reach the sign-in service", body: "Check your connection and try again." },
+};
+
+export function isAuthError(error: unknown, code: AuthError["code"]) {
+  return error instanceof AuthError && error.code === code;
+}
+
+export function looksLikeEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+export const REASSURANCE = "Your draft is kept either way";
