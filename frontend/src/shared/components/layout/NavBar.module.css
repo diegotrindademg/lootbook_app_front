@@ -33,7 +33,7 @@
 .profileLabel {
   font-size: var(--font-size-sm);
   line-height: 19px;
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
 }
 
 .profileName {

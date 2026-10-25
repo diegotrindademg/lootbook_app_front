@@ -44,7 +44,7 @@
   text-align: center;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
 }
 
 .actions {

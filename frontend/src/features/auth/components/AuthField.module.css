@@ -5,14 +5,14 @@
   border: var(--border-width-hairline) solid transparent;
   border-radius: 22px;
   outline: none;
-  background: var(--color-surface-sunken);
+  background: var(--color-surface-field);
   font-family: var(--font-family-body);
   font-size: var(--font-size-sm);
   color: var(--color-content-primary);
 }
 
 .field::placeholder {
-  color: color-mix(in srgb, var(--color-content-primary) 35%, transparent);
+  color: var(--color-content-subtle);
 }
 
 .field:focus {
@@ -21,7 +21,7 @@
 
 .invalid,
 .invalid:focus {
-  border-color: color-mix(in srgb, var(--color-feedback-error) 75%, transparent);
+  border-color: var(--color-feedback-error);
 }
 
 .field:disabled {

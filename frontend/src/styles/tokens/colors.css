@@ -78,4 +78,12 @@
   --color-gradient-greenblue-start: #24e191;
   --color-gradient-greenblue-end: #65e3ff;
   --color-border-glass: rgb(255 255 255 / 10%);
+  --color-content-subtle: #7b8395; /* Figma Text/Muted */
+  --color-content-supporting: #b9bec7; /* Figma Text/Secondary */
+  --color-content-subtitle: var(--color-neutral-20); /* Figma Neutral-20, the card's second line */
+  --color-content-on-danger: #fecaca; /* Figma Text/On danger */
+  --color-content-on-gradient: #101316; /* Figma Surface/Ink, the + on Create */
+  --color-surface-field: #16171b; /* Figma Surface/Field */
+  --color-surface-notice-error: #412429; /* Figma Surface/Notice error */
+  --color-surface-notice-success: #21383b; /* Figma Surface/Notice success */
 }

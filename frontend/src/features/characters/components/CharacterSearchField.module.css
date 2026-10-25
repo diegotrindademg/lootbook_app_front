@@ -7,7 +7,7 @@
   padding: 0 var(--space-4);
   border: var(--border-width-hairline) solid transparent;
   border-radius: var(--radius-md);
-  background: var(--color-surface-sunken);
+  background: var(--color-surface-field);
   transition: border-color 140ms linear;
   cursor: text;
 }
@@ -18,7 +18,7 @@
 
 .icon {
   flex-shrink: 0;
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
 }
 
 .input {
@@ -34,7 +34,7 @@
 }
 
 .input::placeholder {
-  color: color-mix(in srgb, var(--color-content-primary) 35%, transparent);
+  color: var(--color-content-subtle);
 }
 
 .input::-webkit-search-cancel-button {

@@ -87,7 +87,7 @@
   margin: 0;
   font-size: var(--font-size-sm);
   line-height: 21px;
-  color: var(--color-content-secondary);
+  color: var(--color-content-supporting);
   text-wrap: pretty;
 }
 
@@ -149,7 +149,7 @@
 }
 
 .muted {
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
 }
 
 /* Rows that hold text buttons: "Forgot password?" at the right, the rest centred. */
@@ -167,7 +167,7 @@
 .rowText {
   font-size: var(--font-size-sm);
   line-height: 19px;
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
 }
 
 .fields {

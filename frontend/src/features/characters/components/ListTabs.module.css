@@ -15,7 +15,7 @@
   font-weight: var(--font-weight-regular);
   line-height: 19px;
   white-space: nowrap;
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
   cursor: pointer;
 }
 

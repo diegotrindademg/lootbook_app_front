@@ -51,7 +51,7 @@
   border: none;
   border-radius: 16px;
   background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
   cursor: pointer;
 }
 

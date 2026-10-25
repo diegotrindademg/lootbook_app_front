@@ -45,5 +45,5 @@
 
 .or {
   font-size: var(--font-size-sm);
-  color: var(--color-content-muted);
+  color: var(--color-content-subtle);
 }
