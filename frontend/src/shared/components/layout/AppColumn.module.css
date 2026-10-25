@@ -1,0 +1,8 @@
+/* WAITING ON THE WIDE DESIGN: a centred phone-width column at every width for now. */
+.column {
+  position: relative;
+  width: 100%;
+  max-width: var(--app-column-width);
+  min-height: 100dvh;
+  margin: 0 auto;
+}

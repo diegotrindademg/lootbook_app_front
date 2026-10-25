@@ -1,5 +1,5 @@
-import HomeScreen from "@/features/home/components/HomeScreen";
+import CharacterScreen from "@/features/characters/components/CharacterScreen";
 
 export default function Home() {
-  return <HomeScreen />;
+  return <CharacterScreen />;
 }

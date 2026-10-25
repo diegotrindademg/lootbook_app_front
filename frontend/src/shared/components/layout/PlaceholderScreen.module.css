@@ -1,0 +1,26 @@
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 100dvh;
+  padding: 0 40px 120px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 26px;
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  color: var(--color-content-primary);
+}
+
+.body {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  color: var(--color-content-muted);
+}
