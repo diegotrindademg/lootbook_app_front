@@ -1,0 +1,43 @@
+.toggle {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-start;
+  width: 44px;
+  height: 26px;
+  padding: 3px;
+  border: none;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--color-content-primary) 14%, transparent);
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+/* Drawn 26px tall; the touch target is 44px. */
+.toggle::after {
+  content: "";
+  position: absolute;
+  inset: -9px 0;
+}
+
+.on {
+  justify-content: flex-end;
+  background: var(--color-accent-default);
+}
+
+.knob {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-content-primary);
+}
+
+.on .knob {
+  background: var(--color-content-on-gradient);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

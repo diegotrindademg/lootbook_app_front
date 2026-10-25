@@ -1,0 +1,13 @@
+.box {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-accent-default) 9.4%, transparent);
+  color: var(--color-accent-default);
+}
+
+.inactive {
+  background: color-mix(in srgb, var(--color-content-primary) 5%, transparent);
+  color: var(--color-content-subtle);
+}

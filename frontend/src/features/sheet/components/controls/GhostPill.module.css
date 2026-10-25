@@ -1,0 +1,50 @@
+/* Design: 34 tall, padding 0 16, radius 17, Open Sans 600/13 (lifted to 14px, M0 X3). */
+.pill {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 17px;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Drawn 34px tall; the touch target is 44px. */
+.pill::after {
+  content: "";
+  position: absolute;
+  inset: -5px 0;
+}
+
+.teal {
+  border: none;
+  background: var(--color-accent-default);
+  color: var(--color-content-on-gradient);
+}
+
+.white {
+  border: var(--border-width-default) solid color-mix(in srgb, var(--color-content-primary) 70%, transparent);
+  background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+  color: var(--color-content-primary);
+}
+
+.pill:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pill.busy {
+  opacity: 0.7;
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

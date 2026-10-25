@@ -1,0 +1,59 @@
+.stepper {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.minus,
+.plus {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Drawn 32px; the touch target is 44px. */
+.minus::after,
+.plus::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+.minus {
+  border: var(--border-width-default) solid color-mix(in srgb, var(--color-content-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+  color: var(--color-content-primary);
+}
+
+.plus {
+  border: none;
+  background: color-mix(in srgb, var(--color-accent-default) 85%, transparent);
+  color: var(--color-content-on-gradient);
+}
+
+.minus:disabled,
+.plus:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.minus:focus-visible,
+.plus:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+.value {
+  min-width: 28px;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
+  text-align: center;
+  color: var(--color-content-primary);
+}

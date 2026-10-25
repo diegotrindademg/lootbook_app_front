@@ -1,0 +1,76 @@
+.overlay {
+  position: fixed;
+  z-index: 30;
+  inset: 0 auto 0 50%;
+  display: flex;
+  align-items: flex-end;
+  width: min(100vw, var(--app-column-width));
+  overflow: hidden;
+  transform: translateX(-50%);
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-surface-overlay) 60%, transparent);
+  animation: scrimIn 260ms ease forwards;
+}
+
+.sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  background: var(--color-surface-page-bottom);
+  box-shadow: 0 -20px 40px color-mix(in srgb, black 35%, transparent);
+  color: var(--color-content-primary);
+  animation: sheetIn 340ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  will-change: transform;
+}
+
+.rule {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 282px;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-default);
+  transform: translateX(-50%);
+}
+
+.grabber {
+  flex-shrink: 0;
+  width: 32px;
+  height: 4px;
+  margin: 12px auto 0;
+  border-radius: 2px;
+  background: var(--color-neutral-40);
+}
+
+@keyframes sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes scrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet,
+  .scrim {
+    animation-duration: 1ms;
+  }
+}

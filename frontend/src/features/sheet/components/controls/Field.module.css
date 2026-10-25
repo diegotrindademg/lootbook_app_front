@@ -1,0 +1,50 @@
+.field {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 var(--space-4);
+  border: var(--border-width-hairline) solid transparent;
+  border-radius: 22px;
+  outline: none;
+  background: var(--color-surface-field);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-content-primary);
+  resize: none;
+}
+
+.field::placeholder {
+  color: var(--color-content-subtle);
+}
+
+.field:focus {
+  border-color: color-mix(in srgb, var(--color-accent-default) 60%, transparent);
+}
+
+.small {
+  height: 40px;
+  border-radius: 20px;
+}
+
+.center {
+  padding: 0 10px;
+  text-align: center;
+}
+
+.area {
+  height: auto;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  line-height: 21px;
+}
+
+/* Design: Open Sans 700/10, .16em, uppercase. Lifted to 14px (M0, X3). */
+.sectionLabel {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-content-subtle);
+}
