@@ -1,0 +1,185 @@
+/*
+ * Design `EditorShell`, 375 x 812, without the design's status bar: every top is 24px higher than
+ * in the frame, as on the first slice's screens.
+ */
+.column {
+  height: 100dvh;
+  min-height: 0;
+}
+
+.screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--color-surface-page-top) 0%, var(--color-surface-page-bottom) 100%);
+}
+
+.top {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  height: 34px;
+  margin: calc(20px + env(safe-area-inset-top)) 20px 0;
+}
+
+.cancel {
+  position: relative;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-content-primary);
+  cursor: pointer;
+}
+
+/* Drawn 34px tall; the touch target is 44px. */
+.cancel::after {
+  content: "";
+  position: absolute;
+  inset: -5px -6px;
+}
+
+.cancel:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.cancel:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+/* Design: right 20, top 80 (56 here), max-width 200, Open Sans 11/15. Lifted to 14px (M0, X3). */
+.saveHint {
+  position: absolute;
+  top: calc(56px + env(safe-area-inset-top));
+  right: 20px;
+  z-index: 10;
+  max-width: 200px;
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 19px;
+  text-align: right;
+  color: var(--color-content-subtle);
+}
+
+/* Design: top 96 (72 here), Acme 28/34, a teal rule while empty, a grey one once named. */
+.name {
+  flex-shrink: 0;
+  width: calc(100% - 40px);
+  margin: 18px 20px 0;
+  padding: 0 0 10px;
+  border: none;
+  border-bottom: var(--border-width-hairline) solid color-mix(in srgb, var(--color-accent-default) 50%, transparent);
+  border-radius: 0;
+  outline: none;
+  background: none;
+  font-family: var(--font-family-display);
+  font-size: 28px;
+  line-height: 34px;
+  color: var(--color-content-primary);
+}
+
+.named {
+  border-bottom-color: color-mix(in srgb, var(--color-content-primary) 18%, transparent);
+}
+
+.name::placeholder {
+  color: var(--color-content-subtle);
+}
+
+.name:focus-visible {
+  border-bottom-color: var(--color-accent-default);
+}
+
+/* Design: top 164 (140 here), padding 4px 20px 24px, scrolls. */
+.body {
+  flex: 1;
+  min-height: 0;
+  margin-top: 23px;
+  padding: 4px 20px 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  transition: opacity 180ms ease;
+}
+
+.dimmed {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  color: var(--color-accent-default);
+}
+
+.hiddenText {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Design: the notice and toast stack, left and right 20, bottom 96, above the footer. */
+.stack {
+  position: absolute;
+  right: 20px;
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  left: 20px;
+  z-index: 14;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Design: bottom 0, 88 tall, a fade into the page; Add block full width, 48 tall. */
+.footer {
+  position: relative;
+  z-index: 12;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: calc(88px + env(safe-area-inset-bottom));
+  margin-top: -24px;
+  padding: 0 20px env(safe-area-inset-bottom);
+  background: linear-gradient(180deg, transparent 0%, var(--color-surface-page-bottom) 30%);
+}
+
+.addBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  /* #088E79 and #123533 in the design: the same mixes as the first slice's PillButton. */
+  border: 2px solid color-mix(in srgb, var(--color-accent-default) 60%, var(--color-surface-page-bottom));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-accent-default) 15%, var(--color-surface-page-bottom));
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-lg);
+  color: var(--color-teal-20);
+  cursor: pointer;
+}
+
+.addBlock:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.addBlock:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

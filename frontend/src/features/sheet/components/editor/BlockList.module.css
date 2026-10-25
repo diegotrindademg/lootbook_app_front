@@ -1,0 +1,47 @@
+.list {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  transition: transform 180ms ease;
+}
+
+.lifted {
+  z-index: 5;
+  transition: none;
+}
+
+.empty {
+  margin: 0;
+  padding: 28px 20px;
+  border: var(--border-width-hairline) dashed color-mix(in srgb, var(--color-content-primary) 12%, transparent);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  text-align: center;
+  color: var(--color-content-subtle);
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: none;
+  }
+}
