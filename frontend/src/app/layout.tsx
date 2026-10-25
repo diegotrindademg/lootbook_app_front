@@ -1,6 +1,7 @@
 
 import type { Metadata } from "next";
 import { Acme, Open_Sans } from "next/font/google";
+import { AuthSessionProvider } from "@/features/auth/state/AuthSessionContext";
 import "./globals.css";
 
 const acme = Acme({
@@ -29,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${acme.variable} ${openSans.variable} antialiased`}
       >
-        {children}
+        <AuthSessionProvider>{children}</AuthSessionProvider>
       </body>
     </html>
   );
