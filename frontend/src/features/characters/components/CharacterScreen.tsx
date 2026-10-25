@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthSession } from "@/features/auth/state/AuthSessionContext";
+import ActionSheet, { type SheetAction } from "@/shared/components/overlay/ActionSheet";
+import { ConfirmDialog, PromptDialog } from "@/shared/components/overlay/Dialog";
 import AppColumn from "@/shared/components/layout/AppColumn";
 import NavBar from "@/shared/components/layout/NavBar";
 import TabBar from "@/shared/components/layout/TabBar";
@@ -9,7 +12,7 @@ import InlineNotice from "@/shared/components/ui/InlineNotice";
 import { useCharacterList } from "../hooks/useCharacterList";
 import { useLaunchSplash } from "../hooks/useLaunchSplash";
 import { SAMPLE_CHARACTER } from "../data/sampleCharacter";
-import type { CharacterListTab } from "../types";
+import type { CharacterListTab, CharacterSummary } from "../types";
 import { emptyLabel, filterCharacters } from "../utils/filterCharacters";
 import CarouselSkeleton from "./CarouselSkeleton";
 import CharacterCard from "./CharacterCard";
@@ -52,6 +55,13 @@ export default function CharacterScreen() {
   const [searchFocused, setSearchFocused] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  const router = useRouter();
+  const [menuFor, setMenuFor] = useState<CharacterSummary | null>(null);
+  const [dialog, setDialog] = useState<{ kind: "rename" | "delete"; character: CharacterSummary } | null>(
+    null,
+  );
+  const [revealKey, setRevealKey] = useState<string | null>(null);
+
   // The Search tab on other screens links to /?search=1: focus the field once the screen is up.
   useEffect(() => {
     if (splash.phase !== "done") return;
@@ -66,6 +76,34 @@ export default function CharacterScreen() {
   if (splash.phase === "showing") return <SplashScreen onSkip={splash.skip} />;
 
   const visible = filterCharacters(list.characters, tab, query);
+
+  const menuActions = (character: CharacterSummary): SheetAction[] => {
+    const archived = character.status === "ARCHIVED";
+    return [
+      { label: "Edit", icon: "sliders", onSelect: () => router.push(`/characters/${character.id}/edit`) },
+      { label: "Rename", icon: "pen", onSelect: () => setDialog({ kind: "rename", character }) },
+      {
+        label: "Duplicate",
+        icon: "copy",
+        onSelect: async () => {
+          const copy = await list.actions.duplicate(character);
+          if (!copy) return;
+          setTab("Recent");
+          setRevealKey(copy.id);
+        },
+      },
+      archived
+        ? { label: "Unarchive", icon: "archive", onSelect: () => list.actions.unarchive(character) }
+        : { label: "Archive", icon: "archive", onSelect: () => list.actions.archive(character) },
+      {
+        label: "Delete",
+        icon: "trash",
+        destructive: true,
+        onSelect: () => setDialog({ kind: "delete", character }),
+      },
+    ];
+  };
+  const overlayOpen = Boolean(menuFor || dialog);
   const quietLabel = emptyLabel(tab, query);
 
   let well: React.ReactNode;
@@ -87,6 +125,7 @@ export default function CharacterScreen() {
     well = (
       <CharacterCarousel
         key={tab}
+        revealKey={revealKey}
         slides={visible.map((character) => ({
           key: character.id,
           render: (active) => (
@@ -96,6 +135,7 @@ export default function CharacterScreen() {
               imageUrl={character.imageUrl}
               active={active}
               href={`/characters/${character.id}`}
+              onMenu={() => setMenuFor(character)}
             />
           ),
         }))}
@@ -114,7 +154,7 @@ export default function CharacterScreen() {
 
   return (
     <AppColumn>
-      <main className={styles.screen}>
+      <main className={styles.screen} inert={overlayOpen || undefined}>
         <NavBar
           signedIn={signedIn}
           profileName={session.user?.displayName}
@@ -143,8 +183,53 @@ export default function CharacterScreen() {
         activeId="characters"
         createHref="/characters/create"
         onSearch={() => searchRef.current?.focus()}
-        hidden={searchFocused}
+        hidden={searchFocused || overlayOpen}
       />
+
+      {list.failure && (
+        <div className={styles.failure}>
+          <InlineNotice
+            title={list.failure}
+            body="Nothing was changed. Check your connection and try again."
+            actionLabel="OK"
+            onAction={list.clearFailure}
+          />
+        </div>
+      )}
+
+      {menuFor && (
+        <ActionSheet title={menuFor.name} actions={menuActions(menuFor)} onClose={() => setMenuFor(null)} />
+      )}
+
+      {dialog?.kind === "rename" && (
+        <PromptDialog
+          title="Rename"
+          label="Character name"
+          initialValue={dialog.character.name}
+          placeholder="Character name"
+          confirmLabel="Rename"
+          onConfirm={(name) => {
+            list.actions.rename(dialog.character, name);
+            setDialog(null);
+          }}
+          onCancel={() => setDialog(null)}
+        />
+      )}
+
+      {dialog?.kind === "delete" && (
+        <ConfirmDialog
+          title={`Delete ${dialog.character.name}?`}
+          body="This cannot be undone. The sheet and everything on it goes."
+          confirmLabel="Delete character"
+          cancelLabel="Keep it"
+          destructive
+          onConfirm={() => {
+            list.actions.remove(dialog.character);
+            setDialog(null);
+          }}
+          onCancel={() => setDialog(null)}
+        />
+      )}
     </AppColumn>
   );
 }

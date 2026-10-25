@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./CharacterCarousel.module.css";
 
 const SLOT_PITCH = 286; // card width 292 with the 6px peek overlap
@@ -12,10 +12,33 @@ export type CarouselSlide = {
  * The swipeable row of cards: the centred card is full size, its neighbours peek at a smaller scale.
  * Page dots under it say where you are.
  */
-export default function CharacterCarousel({ slides }: { slides: CarouselSlide[] }) {
+export default function CharacterCarousel({
+  slides,
+  revealKey,
+}: {
+  slides: CarouselSlide[];
+  /** When this changes, the slide with that key slides to the centre (a new copy, for example). */
+  revealKey?: string | null;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const active = Math.min(activeIndex, Math.max(slides.length - 1, 0));
+
+  useEffect(() => {
+    if (!revealKey || !scrollRef.current) return;
+    const index = slides.findIndex((slide) => slide.key === revealKey);
+    const scroller = scrollRef.current;
+    if (index < 0) return;
+    const frame = window.requestAnimationFrame(() =>
+      scroller.scrollTo({
+        left: index * SLOT_PITCH,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      }),
+    );
+    return () => window.cancelAnimationFrame(frame);
+    // Only a new key should move the row, not every re-render of the slides.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealKey]);
 
   return (
     <>

@@ -9,6 +9,8 @@
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
+  /* A card added at the front (a copy) must not drag the row along with it. */
+  overflow-anchor: none;
 }
 
 .scroller::-webkit-scrollbar {

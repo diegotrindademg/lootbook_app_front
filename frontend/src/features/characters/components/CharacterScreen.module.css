@@ -21,3 +21,13 @@
   width: 100%;
   padding: 0 20px;
 }
+
+/* A card action that failed (not drawn in the design): above the tab bar until dismissed. */
+.failure {
+  position: fixed;
+  z-index: 20;
+  bottom: calc(108px + env(safe-area-inset-bottom));
+  left: 50%;
+  width: calc(min(100vw, var(--app-column-width)) - 40px);
+  transform: translateX(-50%);
+}
