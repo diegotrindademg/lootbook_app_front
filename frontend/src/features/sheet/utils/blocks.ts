@@ -139,3 +139,8 @@ export function blockHasContent(block: SheetBlock) {
       return Boolean(block.body.trim());
   }
 }
+
+/** "sparkles" -> "Sparkles": the spoken name of a block icon. */
+export function iconName(key: string) {
+  return key.charAt(0).toUpperCase() + key.slice(1);
+}

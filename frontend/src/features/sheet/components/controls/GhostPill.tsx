@@ -8,6 +8,8 @@ type GhostPillProps = {
   disabled?: boolean;
   /** Keeps its skin, shows a spinner and stops taking presses (Save while saving). */
   busy?: boolean;
+  /** Looks disabled but stays focusable, so the reason it is off (aria-describedby) can be read. */
+  inactive?: boolean;
   onClick?: () => void;
   ariaLabel?: string;
   ariaDescribedBy?: string;
@@ -19,11 +21,12 @@ export default function GhostPill({
   tone = "white",
   disabled = false,
   busy = false,
+  inactive = false,
   onClick,
   ariaLabel,
   ariaDescribedBy,
 }: GhostPillProps) {
-  const className = [styles.pill, tone === "teal" ? styles.teal : styles.white, busy && styles.busy]
+  const className = [styles.pill, tone === "teal" ? styles.teal : styles.white, busy && styles.busy, inactive && styles.inactive]
     .filter(Boolean)
     .join(" ");
   return (
@@ -32,9 +35,10 @@ export default function GhostPill({
       className={className}
       disabled={disabled || busy}
       aria-busy={busy || undefined}
+      aria-disabled={inactive || undefined}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
-      onClick={onClick}
+      onClick={inactive ? undefined : onClick}
     >
       {busy && <Spinner size={14} />}
       {children}

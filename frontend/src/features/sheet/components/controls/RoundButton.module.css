@@ -1,0 +1,35 @@
+.round {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+  color: var(--color-content-subtle);
+  cursor: pointer;
+}
+
+/* Drawn 28px; the touch target is 44px. */
+.round::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+.round svg {
+  transition: transform 200ms ease;
+}
+
+.open svg {
+  transform: rotate(180deg);
+}
+
+.round:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

@@ -1,0 +1,86 @@
+.row {
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: 14px;
+  background: var(--color-surface-sunken);
+}
+
+.picked {
+  border-color: color-mix(in srgb, var(--color-accent-default) 60%, transparent);
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 8px 8px 14px;
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  min-height: 28px;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  background: none;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 28px;
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-content-primary);
+}
+
+button.name {
+  cursor: pointer;
+}
+
+button.name:focus-visible {
+  border-radius: 6px;
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}
+
+.check {
+  flex-shrink: 0;
+  color: var(--color-accent-default);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2px 14px 14px;
+}
+
+.add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Design: Open Sans 12/18. Lifted to 14px (M0, X3). */
+.hint {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  color: var(--color-content-subtle);
+}
+
+.detailField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detailLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 18px;
+  color: var(--color-content-supporting);
+}
