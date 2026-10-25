@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { DEV_FAKES_ENABLED } from "@/shared/config/devFakes";
+import { RESUME_NEW_DRAFT_PATH, readNewDraftName } from "@/features/sheet/utils/deviceDraft";
 
 /**
  * What the sign-in screens share while the user moves between them: the email (carried from one
@@ -64,11 +64,11 @@ export function AuthFlowProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const stored = readStored();
-    setReturnTo(safeReturnTo(params.get("returnTo")) ?? stored.returnTo);
+    const back = safeReturnTo(params.get("returnTo")) ?? stored.returnTo;
+    setReturnTo(back);
     setEmail((current) => current || stored.email);
-    // TODO(Kerley): the draft kept on the device (plan C5) gives its name here. Until the editor
-    // exists, the dev fakes accept ?draft=Name to show the "Save your character" variants.
-    if (DEV_FAKES_ENABLED) setDraftName(params.get("draft"));
+    // Reached from Save in the editor: the draft kept on this device (plan C5) gives its name.
+    setDraftName(back === RESUME_NEW_DRAFT_PATH ? readNewDraftName() : null);
     setLoaded(true);
   }, []);
 
