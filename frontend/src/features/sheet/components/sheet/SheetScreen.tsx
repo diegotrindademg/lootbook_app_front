@@ -9,12 +9,14 @@ import Icon from "@/shared/components/ui/Icon";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
 import Spinner from "@/shared/components/ui/Spinner";
 import UndoToast from "@/shared/components/ui/UndoToast";
+import { useWide } from "@/shared/hooks/useWide";
 import { sheetApi } from "../../api/sheetApi";
 import { SAMPLE_SHEET } from "../../data/sampleSheet";
 import { listTitles, refills, type ResourceSet, useResourcePlay } from "../../hooks/useResourcePlay";
 import type { CharacterSheet, ResourceBlock } from "../../types";
 import { identityFromBlocks } from "../../utils/blocks";
 import BlockView from "../blocks/BlockViews";
+import BlockSections from "./BlockSections";
 import BlockTabs from "./BlockTabs";
 import QuickAccessStrip, { NewSessionChip } from "./QuickAccessStrip";
 import styles from "./SheetScreen.module.css";
@@ -29,6 +31,8 @@ const DRAG_THRESHOLD = 60;
  * two positions. Panel down: the art with the identity band. Panel raised: quick access, one tab per
  * block, the block. Drag the band or the panel's head, or tap it, to move between them. Edit opens
  * the editor; the sheet is for play. `sample` opens the sample character read only.
+ * At wide (Figma "H1 · Brakka · wide" 2415:34098) there are no positions: the art holds the left 480
+ * with the identity at its foot, and every block is on the page at the right, the tabs scrolling to it.
  */
 export default function SheetScreen({ characterId, sample = false }: { characterId: string; sample?: boolean }) {
   const router = useRouter();
@@ -41,6 +45,10 @@ export default function SheetScreen({ characterId, sample = false }: { character
   const play = useResourcePlay(characterId, setSheet);
   const [refilled, setRefilled] = useState<{ message: string; changes: ResourceSet[] } | null>(null);
   const [fullNote, setFullNote] = useState("");
+  const wide = useWide();
+  const mainRef = useRef<HTMLDivElement>(null);
+  /** While a tab's scroll runs, the scroll does not move the current tab. */
+  const jumping = useRef<number | null>(null);
 
   const load = useCallback(async () => {
     if (sample) return;
@@ -67,6 +75,35 @@ export default function SheetScreen({ characterId, sample = false }: { character
   const active = blocks.find((block) => block.id === activeId) ?? blocks[0];
   const identity = identityFromBlocks(blocks);
   const tall = Boolean(identity.eyebrow || identity.subtitle);
+
+  // Wide: the tab of the section at the top of the page is the current one.
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!wide || !main) return;
+    const onScroll = () => {
+      if (jumping.current !== null) return;
+      const line = main.getBoundingClientRect().top + 120;
+      const list = sheet?.blocks ?? [];
+      let current = list[0]?.id ?? null;
+      for (const block of list) {
+        const top = document.getElementById(`block-${block.id}`)?.getBoundingClientRect().top;
+        if (top !== undefined && top <= line) current = block.id;
+      }
+      setActiveId(current);
+    };
+    main.addEventListener("scroll", onScroll, { passive: true });
+    return () => main.removeEventListener("scroll", onScroll);
+  }, [wide, sheet?.blocks]);
+
+  const jumpTo = (id: string) => {
+    setActiveId(id);
+    if (jumping.current !== null) window.clearTimeout(jumping.current);
+    jumping.current = window.setTimeout(() => {
+      jumping.current = null;
+    }, 900);
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.getElementById(`block-${id}`)?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+  };
 
   // Drag the band or the panel's head; a tap with no drag also moves it.
   const drag = useRef<{ startY: number; moved: boolean } | null>(null);
@@ -143,6 +180,156 @@ export default function SheetScreen({ characterId, sample = false }: { character
   const onResetResource = sample ? undefined : (block: ResourceBlock) => refill([block]);
   const pinned = blocks.some((block) => block.pinned);
 
+  const backButton = (
+    <button type="button" className={`${styles.circle} ${styles.back}`} aria-label="Back" onClick={() => router.push("/")}>
+      <Icon name="chevronLeft" size={22} />
+    </button>
+  );
+  const topButtons = (
+    <>
+      {sheet && !sample && (
+        <>
+          <button
+            type="button"
+            className={`${styles.circle} ${styles.edit}`}
+            onClick={() => router.push(`/characters/${sheet.id}/edit`)}
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            className={`${styles.circle} ${styles.favorite}`}
+            aria-label="Favourite"
+            aria-pressed={sheet.favorite}
+            onClick={toggleFavorite}
+          >
+            <BlockIcon icon="heart" size={20} filled={sheet.favorite} className={sheet.favorite ? styles.heartOn : undefined} />
+          </button>
+        </>
+      )}
+      {sample && <span className={`${styles.circle} ${styles.samplePill}`}>Sample</span>}
+    </>
+  );
+  const banner = (
+    <>
+      {(restored || favoriteFailed || play.failed) && (
+        <div className={styles.banner}>
+          {restored && (
+            <InlineNotice tone="success" title="Draft restored" body="Signed in and saved. Nothing was lost." />
+          )}
+          {favoriteFailed && (
+            <InlineNotice
+              tone="error"
+              title="Could not change the favourite"
+              body="Check your connection and try again."
+              actionLabel="Dismiss"
+              onAction={() => setFavoriteFailed(false)}
+            />
+          )}
+          {play.failed && (
+            // WAITING ON DESIGN: no frame shows a tap at the table that did not save.
+            <InlineNotice
+              tone="error"
+              title="That change did not save"
+              body="No connection. The sheet shows what was last saved."
+              actionLabel="Dismiss"
+              onAction={play.dismissFailure}
+            />
+          )}
+        </div>
+      )}
+    </>
+  );
+  const states = (
+    <>
+      {phase === "loading" && (
+        <div className={styles.loading} role="status">
+          <Spinner size={28} />
+          <span className={styles.hidden}>Opening the sheet</span>
+        </div>
+      )}
+      {phase === "error" && (
+        <div className={styles.loadError}>
+          <InlineNotice
+            tone="error"
+            title="Could not open this character"
+            body="Check your connection and try again."
+            actionLabel="Retry"
+            onAction={load}
+          />
+        </div>
+      )}
+    </>
+  );
+  const liveAndToast = (
+    <>
+      <p className={styles.hidden} role="status" aria-live="polite">
+        {fullNote || play.announcement}
+      </p>
+      {refilled && (
+        <div className={styles.toast}>
+          <UndoToast
+            key={refilled.message + refilled.changes.length}
+            message={refilled.message}
+            durationMs={6000}
+            onUndo={() => {
+              play.setMany(refilled.changes.map((c) => ({ ...c, from: c.to, to: c.from })));
+              setRefilled(null);
+            }}
+            onDismiss={() => setRefilled(null)}
+          />
+        </div>
+      )}
+    </>
+  );
+
+  if (wide) {
+    return (
+      <AppColumn size="page" className={styles.column}>
+        <div className={styles.wide}>
+          <aside className={styles.wideArt}>
+            {sheet?.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- a portrait from the character, any host
+              <img className={styles.image} src={sheet.imageUrl} alt="" />
+            ) : (
+              <div className={styles.noImage} />
+            )}
+            <div className={styles.shade} aria-hidden="true" />
+            {sheet && phase === "ready" && <div className={`${styles.band} ${styles.bandTall}`}>{identityStack}</div>}
+          </aside>
+          {backButton}
+          {topButtons}
+          <div className={styles.wideMain} ref={mainRef}>
+            <div className={styles.wideContent}>
+              {banner}
+              {states}
+              {sheet && phase === "ready" && (
+                <>
+                  <QuickAccessStrip blocks={blocks} onSetResource={onSetResource} onNewSession={onNewSession} />
+                  {!pinned && onNewSession && (
+                    // WAITING ON DESIGN: page 6 puts New session on the strip; with nothing pinned there is no strip.
+                    <div className={styles.newSessionRow}>
+                      <NewSessionChip onClick={onNewSession} />
+                    </div>
+                  )}
+                  {blocks.length && active ? (
+                    <>
+                      <BlockTabs blocks={blocks} activeId={active.id} onChange={jumpTo} anchors />
+                      <BlockSections blocks={blocks} onSetResource={onSetResource} onResetResource={onResetResource} />
+                    </>
+                  ) : (
+                    <p className={styles.noBlocks}>This sheet has no blocks yet. Edit to add some.</p>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+          {liveAndToast}
+        </div>
+      </AppColumn>
+    );
+  }
+
   return (
     <AppColumn className={styles.column}>
       <div className={styles.screen}>
@@ -156,75 +343,12 @@ export default function SheetScreen({ characterId, sample = false }: { character
           <div className={styles.shade} aria-hidden="true" />
         </div>
 
-        <button type="button" className={`${styles.circle} ${styles.back}`} aria-label="Back" onClick={() => router.push("/")}>
-          <Icon name="chevronLeft" size={22} />
-        </button>
-        {sheet && !sample && (
-          <>
-            <button
-              type="button"
-              className={`${styles.circle} ${styles.edit}`}
-              onClick={() => router.push(`/characters/${sheet.id}/edit`)}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              className={`${styles.circle} ${styles.favorite}`}
-              aria-label="Favourite"
-              aria-pressed={sheet.favorite}
-              onClick={toggleFavorite}
-            >
-              <BlockIcon icon="heart" size={20} filled={sheet.favorite} className={sheet.favorite ? styles.heartOn : undefined} />
-            </button>
-          </>
-        )}
-        {sample && <span className={`${styles.circle} ${styles.samplePill}`}>Sample</span>}
+        {backButton}
+        {topButtons}
 
-        {(restored || favoriteFailed || play.failed) && (
-          <div className={styles.banner}>
-            {restored && (
-              <InlineNotice tone="success" title="Draft restored" body="Signed in and saved. Nothing was lost." />
-            )}
-            {favoriteFailed && (
-              <InlineNotice
-                tone="error"
-                title="Could not change the favourite"
-                body="Check your connection and try again."
-                actionLabel="Dismiss"
-                onAction={() => setFavoriteFailed(false)}
-              />
-            )}
-            {play.failed && (
-              // WAITING ON DESIGN: no frame shows a tap at the table that did not save.
-              <InlineNotice
-                tone="error"
-                title="That change did not save"
-                body="No connection. The sheet shows what was last saved."
-                actionLabel="Dismiss"
-                onAction={play.dismissFailure}
-              />
-            )}
-          </div>
-        )}
+        {banner}
 
-        {phase === "loading" && (
-          <div className={styles.loading} role="status">
-            <Spinner size={28} />
-            <span className={styles.hidden}>Opening the sheet</span>
-          </div>
-        )}
-        {phase === "error" && (
-          <div className={styles.loadError}>
-            <InlineNotice
-              tone="error"
-              title="Could not open this character"
-              body="Check your connection and try again."
-              actionLabel="Retry"
-              onAction={load}
-            />
-          </div>
-        )}
+        {states}
 
         {sheet && phase === "ready" && stage === "image" && (
           <div
@@ -291,23 +415,7 @@ export default function SheetScreen({ characterId, sample = false }: { character
             </div>
           </section>
         )}
-        <p className={styles.hidden} role="status" aria-live="polite">
-          {fullNote || play.announcement}
-        </p>
-        {refilled && (
-          <div className={styles.toast}>
-            <UndoToast
-              key={refilled.message + refilled.changes.length}
-              message={refilled.message}
-              durationMs={6000}
-              onUndo={() => {
-                play.setMany(refilled.changes.map((c) => ({ ...c, from: c.to, to: c.from })));
-                setRefilled(null);
-              }}
-              onDismiss={() => setRefilled(null)}
-            />
-          </div>
-        )}
+        {liveAndToast}
       </div>
     </AppColumn>
   );
