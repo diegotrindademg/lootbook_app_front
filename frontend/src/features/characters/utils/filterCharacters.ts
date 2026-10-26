@@ -1,6 +1,6 @@
 import type { CharacterListTab, CharacterSummary } from "../types";
 
-/** The cards a list tab shows, narrowed by the search text, newest first. */
+/** The cards a list tab shows, narrowed by the search text (name and subtitle, contract 3), newest first. */
 export function filterCharacters(
   characters: CharacterSummary[],
   tab: CharacterListTab,
@@ -14,7 +14,8 @@ export function filterCharacters(
       if (tab === "Favorites") return c.favorite && !archived;
       return !archived;
     })
-    .filter((c) => !needle || c.name.toLowerCase().includes(needle))
+    .filter((c) => !needle || `${c.name}
+${c.subtitle ?? ""}`.toLowerCase().includes(needle))
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
