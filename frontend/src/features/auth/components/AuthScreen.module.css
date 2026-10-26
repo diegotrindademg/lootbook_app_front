@@ -199,7 +199,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 104px 0 64px;
+    /* Centred a little above the middle, as page 2's no-draft card at 532.5, 157.5 (review F9). */
+    padding: 76px 0 64px;
   }
 
   .logo {
