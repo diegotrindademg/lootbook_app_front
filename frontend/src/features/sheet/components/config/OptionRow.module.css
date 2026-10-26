@@ -1,0 +1,145 @@
+/* Figma "Config / Option row": radius 14, hairline on the card surface, padding 8 8 8 14, gap 10. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 8px 8px 8px 14px;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: 14px;
+  background: var(--color-surface-sunken);
+}
+
+.picked {
+  border-color: color-mix(in srgb, var(--color-accent-default) 55%, transparent);
+}
+
+.withArt {
+  padding-left: 8px;
+}
+
+.art {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  margin: -8px 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  text-align: left;
+}
+
+button.copy {
+  cursor: pointer;
+}
+
+.name {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 19px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-content-primary);
+}
+
+.detail {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-content-subtle);
+}
+
+.pickedMark {
+  flex-shrink: 0;
+  color: var(--color-accent-default);
+}
+
+/* A value pill, as on the sheet (Acme 14 teal on the faint teal). */
+.value {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-accent-default) 9.4%, transparent);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-sm);
+  line-height: 18px;
+  color: var(--color-accent-default);
+}
+
+/* The pen: Figma "edit", a 28 circle at white 6%; the touch target is 44. */
+.round {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+  color: var(--color-content-supporting);
+  cursor: pointer;
+}
+
+.round::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+/* A box to tick: 22, radius 6, teal when ticked (as the sheet's List). */
+.check {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: var(--border-width-default) solid color-mix(in srgb, var(--color-content-primary) 30%, transparent);
+  border-radius: 6px;
+  background: none;
+  color: var(--color-content-on-gradient);
+  cursor: pointer;
+}
+
+.check::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+.checked {
+  border-color: var(--color-accent-default);
+  background: var(--color-accent-default);
+}
+
+.copy:focus-visible,
+.round:focus-visible,
+.check:focus-visible {
+  border-radius: 8px;
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

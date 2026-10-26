@@ -1,0 +1,105 @@
+.sub {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Figma page 5, C3 A "Option sheet" head: padding 30 20 0 (14 under the grabber here), gap 12. */
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px 0;
+}
+
+/* Figma "Back button": a 40 circle at white 12%. */
+.back {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 12%);
+  color: var(--color-content-primary);
+  cursor: pointer;
+}
+
+.back::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: var(--font-weight-regular);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.kind {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-content-subtle);
+}
+
+/* Figma: padding 20 20 12, gap 16, scrolls. */
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  padding: 20px 20px 12px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+/* Figma "Config / Sheet foot". */
+.foot {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px calc(22px + env(safe-area-inset-bottom));
+  border-top: var(--border-width-hairline) solid var(--color-border-glass);
+}
+
+.remove {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-feedback-error);
+  cursor: pointer;
+}
+
+.done {
+  width: 140px;
+}
+
+.back:focus-visible,
+.remove:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

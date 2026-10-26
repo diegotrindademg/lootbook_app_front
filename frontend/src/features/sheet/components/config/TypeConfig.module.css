@@ -108,3 +108,11 @@
   flex-wrap: wrap;
   gap: 8px;
 }
+
+/* Figma "Config / Labelled field", Error: the line under the field in Error-1. */
+.fieldError {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  color: var(--color-feedback-error);
+}
