@@ -5,14 +5,16 @@ import { useEffect, useRef } from "react";
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/** Each open overlay and the control that opened it, so an overlay opened from another one (a
- * dialog chosen from a menu) hands focus back to the original control, not to the vanished item. */
+/** Each open overlay and the control that opened it, so an overlay opened from a menu (a dialog
+ * chosen from the card menu) hands focus back to the original control, not to the vanished item.
+ * An overlay opened from a control that stays (a second sheet's pen, a choice in a sheet) hands it
+ * back to that control. */
 const openers = new WeakMap<Element, HTMLElement | null>();
 
 function resolveOpener(): HTMLElement | null {
   const active = document.activeElement as HTMLElement | null;
   const parentOverlay = active?.closest("[data-overlay-root]");
-  return parentOverlay ? (openers.get(parentOverlay) ?? null) : active;
+  return parentOverlay && active?.closest('[role="menu"]') ? (openers.get(parentOverlay) ?? null) : active;
 }
 
 /**

@@ -55,9 +55,14 @@ export function rollOnce(roll: Roll, random = Math.random) {
   return { total: kept.reduce((sum, die) => sum + die, 0) + roll.bonus, kept, dropped: dice.slice(roll.keep) };
 }
 
+const SIDE_WORDS: Record<number, string> = {
+  2: "two", 3: "three", 4: "four", 6: "six", 8: "eight", 10: "ten", 12: "twelve", 20: "twenty", 100: "hundred",
+};
+
 /** Figma page 5, T10: "Roll 4 six-sided dice, keep the best 3". */
 export function describeRoll(roll: Roll) {
-  const dice = `${roll.count} ${roll.sides}-sided ${roll.count === 1 ? "die" : "dice"}`;
+  const sides = SIDE_WORDS[roll.sides] ?? String(roll.sides);
+  const dice = `${roll.count} ${sides}-sided ${roll.count === 1 ? "die" : "dice"}`;
   const keep = roll.keep < roll.count ? `, keep the best ${roll.keep}` : "";
   const bonus = roll.bonus ? `, ${roll.bonus > 0 ? "add" : "take away"} ${Math.abs(roll.bonus)}` : "";
   return `Roll ${dice}${keep}${bonus}`;
