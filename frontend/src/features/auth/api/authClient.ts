@@ -1,8 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
 import { DEV_FAKES_ENABLED } from "@/shared/config/devFakes";
 import { AuthError, type AuthChangeListener, type AuthProvider, type AuthUser } from "../types";
+import { deferredAuthClient } from "./deferredAuthClient";
 import { fakeAuthClient } from "./fakeAuthClient";
-import { createSupabaseAuthClient } from "./supabaseAuthClient";
 
 /**
  * Everything the screens need from sign-in, and nothing about how it is done.
@@ -59,9 +58,19 @@ const notConnectedAuthClient: AuthClient = {
  */
 function pickAuthClient(): AuthClient {
   if (DEV_FAKES_ENABLED) return fakeAuthClient;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (url && anonKey) return createSupabaseAuthClient(createClient(url, anonKey).auth);
+  // Written out in full, not through variables, so a build without them leaves supabase-js (about
+  // 65 kB on every page) out of the bundle; with them it loads on the first sign-in call.
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    return deferredAuthClient(async () => {
+      const [{ createClient }, { createSupabaseAuthClient }] = await Promise.all([
+        import("@supabase/supabase-js"),
+        import("./supabaseAuthClient"),
+      ]);
+      return createSupabaseAuthClient(createClient(url, anonKey).auth);
+    });
+  }
   return notConnectedAuthClient;
 }
 
