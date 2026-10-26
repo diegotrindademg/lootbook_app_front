@@ -184,21 +184,22 @@
   min-height: 34px;
 }
 
-/* Figma page 6, Reset A: "New session", teal on the faint teal, a pill 34 tall. */
+/* Figma "New session chip" 2431:5708: teal on Surface/Accent faint (9%), 30 high, padding 0 12, a 14 undo glyph. */
 .newSession {
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   gap: 6px;
-  height: 34px;
-  padding: 0 14px;
+  height: 30px;
+  padding: 0 12px;
   border: none;
-  border-radius: 17px;
-  background: color-mix(in srgb, var(--color-accent-default) 12%, transparent);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--color-accent-default) 9%, transparent);
   font-family: var(--font-family-body);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
+  line-height: 19px;
   color: var(--color-accent-default);
   cursor: pointer;
 }

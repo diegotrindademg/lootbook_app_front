@@ -194,8 +194,13 @@ function Tile({ block, onSetResource }: { block: SheetBlock; onSetResource?: Set
 /** Figma page 6, Reset A: a chip in the strip's caption row that refills Each session resources. */
 export function NewSessionChip({ onClick }: { onClick: () => void }) {
   return (
-    <button type="button" className={styles.newSession} onClick={onClick}>
-      <Icon name="undo" size={16} />
+    <button
+      type="button"
+      className={styles.newSession}
+      aria-label="New session, refill each-session resources"
+      onClick={onClick}
+    >
+      <Icon name="undo" size={14} />
       New session
     </button>
   );

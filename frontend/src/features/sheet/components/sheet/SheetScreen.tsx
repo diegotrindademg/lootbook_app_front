@@ -310,7 +310,7 @@ export default function SheetScreen({ characterId, sample = false }: { character
                 <>
                   <QuickAccessStrip blocks={blocks} onSetResource={onSetResource} onNewSession={onNewSession} />
                   {!pinned && onNewSession && (
-                    // WAITING ON DESIGN: page 6 puts New session on the strip; with nothing pinned there is no strip.
+                    // Page 6, Reset A, nothing pinned: the chip alone at the top, right-aligned where the strip's caption row is.
                     <div className={styles.newSessionRow}>
                       <NewSessionChip onClick={onNewSession} />
                     </div>
@@ -398,7 +398,7 @@ export default function SheetScreen({ characterId, sample = false }: { character
             <div className={styles.panelBody}>
               <QuickAccessStrip blocks={blocks} onSetResource={onSetResource} onNewSession={onNewSession} />
               {!pinned && onNewSession && (
-                // WAITING ON DESIGN: page 6 puts New session on the strip; with nothing pinned there is no strip.
+                // Page 6, Reset A, nothing pinned: the chip alone at the top, right-aligned where the strip's caption row is.
                 <div className={styles.newSessionRow}>
                   <NewSessionChip onClick={onNewSession} />
                 </div>
