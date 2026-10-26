@@ -8,14 +8,15 @@ import BlockIcon from "@/shared/components/ui/BlockIcon";
 import Icon from "@/shared/components/ui/Icon";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
 import Spinner from "@/shared/components/ui/Spinner";
+import UndoToast from "@/shared/components/ui/UndoToast";
 import { sheetApi } from "../../api/sheetApi";
 import { SAMPLE_SHEET } from "../../data/sampleSheet";
-import { useResourcePlay } from "../../hooks/useResourcePlay";
-import type { CharacterSheet } from "../../types";
+import { listTitles, refills, type ResourceSet, useResourcePlay } from "../../hooks/useResourcePlay";
+import type { CharacterSheet, ResourceBlock } from "../../types";
 import { identityFromBlocks } from "../../utils/blocks";
 import BlockView from "../blocks/BlockViews";
 import BlockTabs from "./BlockTabs";
-import QuickAccessStrip from "./QuickAccessStrip";
+import QuickAccessStrip, { NewSessionChip } from "./QuickAccessStrip";
 import styles from "./SheetScreen.module.css";
 
 type Stage = "image" | "info";
@@ -38,6 +39,8 @@ export default function SheetScreen({ characterId, sample = false }: { character
   const [restored, setRestored] = useState(false);
   const [favoriteFailed, setFavoriteFailed] = useState(false);
   const play = useResourcePlay(characterId, setSheet);
+  const [refilled, setRefilled] = useState<{ message: string; changes: ResourceSet[] } | null>(null);
+  const [fullNote, setFullNote] = useState("");
 
   const load = useCallback(async () => {
     if (sample) return;
@@ -119,6 +122,26 @@ export default function SheetScreen({ characterId, sample = false }: { character
 
   const panelId = "sheet-block-panel";
   const onSetResource = sample ? undefined : play.setResource;
+
+  // Figma page 6, Flow 12, option A (contract v1.1, 9): New session refills every Each session
+  // resource to its maximum; a Manual or Custom block refills from its own Reset link. Both offer Undo.
+  const sessionBlocks = blocks.filter(
+    (block): block is ResourceBlock => block.type === "resource" && block.reset.mode === "session",
+  );
+  const refill = (targets: ResourceBlock[]) => {
+    const changes = refills(targets);
+    if (!changes.length) {
+      setFullNote(`${listTitles(targets.map((b) => b.title))} ${targets.length === 1 ? "is" : "are"} already full.`);
+      return;
+    }
+    setFullNote("");
+    play.setMany(changes);
+    const titles = [...new Set(changes.map((c) => blocks.find((b) => b.id === c.blockId)?.title ?? ""))];
+    setRefilled({ message: `${listTitles(titles)} refilled`, changes });
+  };
+  const onNewSession = sample || !sessionBlocks.length ? undefined : () => refill(sessionBlocks);
+  const onResetResource = sample ? undefined : (block: ResourceBlock) => refill([block]);
+  const pinned = blocks.some((block) => block.pinned);
 
   return (
     <AppColumn className={styles.column}>
@@ -243,12 +266,23 @@ export default function SheetScreen({ characterId, sample = false }: { character
               <div className={styles.rule} />
             </div>
             <div className={styles.panelBody}>
-              <QuickAccessStrip blocks={blocks} onSetResource={onSetResource} />
+              <QuickAccessStrip blocks={blocks} onSetResource={onSetResource} onNewSession={onNewSession} />
+              {!pinned && onNewSession && (
+                // WAITING ON DESIGN: page 6 puts New session on the strip; with nothing pinned there is no strip.
+                <div className={styles.newSessionRow}>
+                  <NewSessionChip onClick={onNewSession} />
+                </div>
+              )}
               {blocks.length && active ? (
                 <>
                   <BlockTabs blocks={blocks} activeId={active.id} onChange={setActiveId} panelId={panelId} />
                   <div id={panelId} role="tabpanel" aria-labelledby={`tab-${active.id}`}>
-                    <BlockView key={active.id} block={active} onSetResource={onSetResource} />
+                    <BlockView
+                      key={active.id}
+                      block={active}
+                      onSetResource={onSetResource}
+                      onResetResource={onResetResource}
+                    />
                   </div>
                 </>
               ) : (
@@ -258,8 +292,22 @@ export default function SheetScreen({ characterId, sample = false }: { character
           </section>
         )}
         <p className={styles.hidden} role="status" aria-live="polite">
-          {play.announcement}
+          {fullNote || play.announcement}
         </p>
+        {refilled && (
+          <div className={styles.toast}>
+            <UndoToast
+              key={refilled.message + refilled.changes.length}
+              message={refilled.message}
+              durationMs={6000}
+              onUndo={() => {
+                play.setMany(refilled.changes.map((c) => ({ ...c, from: c.to, to: c.from })));
+                setRefilled(null);
+              }}
+              onDismiss={() => setRefilled(null)}
+            />
+          </div>
+        )}
       </div>
     </AppColumn>
   );

@@ -175,3 +175,45 @@
   letter-spacing: 0.06em;
   color: var(--color-content-subtle);
 }
+
+.captionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+}
+
+/* Figma page 6, Reset A: "New session", teal on the faint teal, a pill 34 tall. */
+.newSession {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--color-accent-default) 12%, transparent);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent-default);
+  cursor: pointer;
+}
+
+.newSession::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 44px;
+  transform: translateY(-50%);
+}
+
+.newSession:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

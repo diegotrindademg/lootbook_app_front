@@ -11,13 +11,24 @@ import styles from "./BlockViews.module.css";
 /** Changes a resource at the table: set tier `tier` of `block` to `next`. Absent on a read-only sheet. */
 export type SetResource = (block: ResourceBlock, tier: number, next: number) => void;
 
+/** Refills a Manual or Custom resource to its maximum (Figma page 6 Flow 12; contract v1.1, 9). */
+export type ResetResource = (block: ResourceBlock) => void;
+
 /** One block as it shows on the sheet (design `BlockView`). */
-export default function BlockView({ block, onSetResource }: { block: SheetBlock; onSetResource?: SetResource }) {
+export default function BlockView({
+  block,
+  onSetResource,
+  onResetResource,
+}: {
+  block: SheetBlock;
+  onSetResource?: SetResource;
+  onResetResource?: ResetResource;
+}) {
   switch (block.type) {
     case "stats":
       return <StatSetView block={block} />;
     case "resource":
-      return <ResourceView block={block} onSetResource={onSetResource} />;
+      return <ResourceView block={block} onSetResource={onSetResource} onResetResource={onResetResource} />;
     case "list":
       return <ListView block={block} />;
     case "text":
@@ -59,9 +70,35 @@ function StatSetView({ block }: { block: StatSetBlock }) {
 }
 
 /** Design `ResourceBlock`: counter, pips, tiered slots or gauge, with minus and plus at the table. */
-function ResourceView({ block, onSetResource }: { block: ResourceBlock; onSetResource?: SetResource }) {
+function ResourceView({
+  block,
+  onSetResource,
+  onResetResource,
+}: {
+  block: ResourceBlock;
+  onSetResource?: SetResource;
+  onResetResource?: ResetResource;
+}) {
   const tier = block.tiers[0];
-  const note = <span className={styles.resetNote}>{resetNote(block.reset)}</span>;
+  // Each session resources refill from the strip's New session; Manual and Custom ones from here.
+  const canReset = onResetResource && block.reset.mode !== "session";
+  const full = block.tiers.every((t) => t.max <= 0 || t.current >= t.max);
+  const note = (
+    <span className={styles.resetLine}>
+      <span className={styles.resetNote}>{resetNote(block.reset)}</span>
+      {canReset && (
+        <button
+          type="button"
+          className={styles.resetLink}
+          aria-label={`Reset ${block.title}`}
+          disabled={full}
+          onClick={() => onResetResource(block)}
+        >
+          Reset
+        </button>
+      )}
+    </span>
+  );
   const steps = tier && onSetResource && (
     <div className={styles.steps}>
       <StepButton

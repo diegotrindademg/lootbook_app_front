@@ -366,3 +366,45 @@
     transition: none;
   }
 }
+
+.resetLine {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Figma page 6, Reset B: "Reset" as a teal text button beside the reset line. */
+.resetLink {
+  position: relative;
+  min-height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent-default);
+  cursor: pointer;
+}
+
+.resetLink::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+.resetLink:disabled {
+  color: var(--color-content-subtle);
+  cursor: default;
+}
+
+.resetLink:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

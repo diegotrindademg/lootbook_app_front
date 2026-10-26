@@ -319,3 +319,17 @@ button.circle::after {
 .panelHead .grabber {
   top: 10px;
 }
+
+.newSessionRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Figma page 6, Reset A after: the Undo toast near the bottom, left and right 20. */
+.toast {
+  position: absolute;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 20px;
+  z-index: 25;
+}

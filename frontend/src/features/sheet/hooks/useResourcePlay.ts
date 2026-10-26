@@ -6,6 +6,26 @@ import type { CharacterSheet, ResourceBlock } from "../types";
 
 type Setter = React.Dispatch<React.SetStateAction<CharacterSheet | null>>;
 
+/** One tier set from one value to another, for New session, Reset and Undo. */
+export type ResourceSet = { blockId: string; tier: number; key: string; from: number; to: number };
+
+/** The tiers of these blocks that are not full, each to be set to its maximum. */
+export function refills(blocks: ResourceBlock[]): ResourceSet[] {
+  return blocks.flatMap((block) =>
+    block.tiers.flatMap((tier, index) =>
+      tier.key && tier.max > 0 && tier.current < tier.max
+        ? [{ blockId: block.id, tier: index, key: tier.key, from: tier.current, to: tier.max }]
+        : [],
+    ),
+  );
+}
+
+/** "Health", "Health and Grit dice", "Health, Mana and Grit dice". */
+export function listTitles(titles: string[]) {
+  if (titles.length < 2) return titles.join("");
+  return `${titles.slice(0, -1).join(", ")} and ${titles[titles.length - 1]}`;
+}
+
 function withTier(sheet: CharacterSheet, blockId: string, tier: number, current: number): CharacterSheet {
   return {
     ...sheet,
@@ -71,5 +91,35 @@ export function useResourcePlay(characterId: string, setSheet: Setter) {
     [characterId, setSheet],
   );
 
-  return { setResource, failed, dismissFailure: () => setFailed(false), announcement };
+  /**
+   * Sets each tier to a value with the one-value write's `set` and the value last seen
+   * (one-value-write.md 7: a reset uses set). Used by New session, a block's Reset link and their Undo.
+   */
+  const setMany = useCallback(
+    (changes: ResourceSet[]) => {
+      if (!changes.length) return;
+      setFailed(false);
+      setSheet((sheet) => changes.reduce((s, c) => (s ? withTier(s, c.blockId, c.tier, c.to) : s), sheet));
+      Promise.all(
+        changes.map((c) => sheetApi.changeResource(characterId, c.key, { set: c.to, expectedCurrent: c.from })),
+      )
+        .then((results) =>
+          setSheet((sheet) =>
+            results.reduce((s, result, i) => (s ? withTier(s, changes[i].blockId, changes[i].tier, result.current) : s), sheet),
+          ),
+        )
+        .catch(async () => {
+          setFailed(true);
+          try {
+            const fresh = await sheetApi.getSheet(characterId);
+            setSheet((sheet) => (sheet ? { ...sheet, blocks: fresh.blocks } : fresh));
+          } catch {
+            setSheet((sheet) => changes.reduce((s, c) => (s ? withTier(s, c.blockId, c.tier, c.from) : s), sheet));
+          }
+        });
+    },
+    [characterId, setSheet],
+  );
+
+  return { setResource, setMany, failed, dismissFailure: () => setFailed(false), announcement };
 }

@@ -1,4 +1,5 @@
 import BlockIcon from "@/shared/components/ui/BlockIcon";
+import Icon from "@/shared/components/ui/Icon";
 import type { ResourceBlock, SheetBlock, StatSetBlock } from "../../types";
 import { formatDerived } from "../../utils/derived";
 import { pickedNames } from "../../utils/blocks";
@@ -11,7 +12,16 @@ import styles from "./QuickAccessStrip.module.css";
  * and stat sets get a full-width row (contract v1.1, 4); the rest share one row of up to three
  * tiles. Nothing pinned, no strip.
  */
-export default function QuickAccessStrip({ blocks, onSetResource }: { blocks: SheetBlock[]; onSetResource?: SetResource }) {
+export default function QuickAccessStrip({
+  blocks,
+  onSetResource,
+  onNewSession,
+}: {
+  blocks: SheetBlock[];
+  onSetResource?: SetResource;
+  /** Figma page 6, Flow 12, option A: refill every Each session resource. Absent when read only. */
+  onNewSession?: () => void;
+}) {
   const pinned = blocks.filter((block) => block.pinned);
   if (!pinned.length) return null;
   const isWide = (block: SheetBlock) =>
@@ -21,10 +31,13 @@ export default function QuickAccessStrip({ blocks, onSetResource }: { blocks: Sh
 
   return (
     <section className={styles.strip} aria-labelledby="quick-access-title">
-      <h3 className={styles.caption} id="quick-access-title">
-        <BlockIcon icon="pin" size={14} />
-        Quick access
-      </h3>
+      <div className={styles.captionRow}>
+        <h3 className={styles.caption} id="quick-access-title">
+          <BlockIcon icon="pin" size={14} />
+          Quick access
+        </h3>
+        {onNewSession && <NewSessionChip onClick={onNewSession} />}
+      </div>
       {wide.map((block) =>
         block.type === "stats" ? (
           <StatsRow key={block.id} block={block} />
@@ -175,5 +188,15 @@ function Tile({ block, onSetResource }: { block: SheetBlock; onSetResource?: Set
       <span className={styles.tileCaption}>{block.title}</span>
       {body}
     </div>
+  );
+}
+
+/** Figma page 6, Reset A: a chip in the strip's caption row that refills Each session resources. */
+export function NewSessionChip({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" className={styles.newSession} onClick={onClick}>
+      <Icon name="undo" size={16} />
+      New session
+    </button>
   );
 }
