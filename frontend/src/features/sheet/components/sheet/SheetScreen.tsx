@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { charactersApi } from "@/features/characters/api/charactersApi";
+import LoadFailed, { failureCause, type LoadFailedCause } from "@/shared/components/feedback/LoadFailed";
+import OfflineBanner, { useOfflineBar } from "@/shared/components/feedback/OfflineBanner";
 import AppColumn from "@/shared/components/layout/AppColumn";
 import BlockIcon from "@/shared/components/ui/BlockIcon";
 import Icon from "@/shared/components/ui/Icon";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
-import Spinner from "@/shared/components/ui/Spinner";
 import UndoToast from "@/shared/components/ui/UndoToast";
 import { useWide } from "@/shared/hooks/useWide";
 import { sheetApi } from "../../api/sheetApi";
@@ -19,6 +20,7 @@ import BlockView from "../blocks/BlockViews";
 import BlockSections from "./BlockSections";
 import BlockTabs from "./BlockTabs";
 import QuickAccessStrip, { NewSessionChip } from "./QuickAccessStrip";
+import SheetSkeleton from "./SheetSkeleton";
 import styles from "./SheetScreen.module.css";
 
 type Stage = "image" | "info";
@@ -46,6 +48,8 @@ export default function SheetScreen({ characterId, sample = false }: { character
   const [refilled, setRefilled] = useState<{ message: string; changes: ResourceSet[] } | null>(null);
   const [fullNote, setFullNote] = useState("");
   const wide = useWide();
+  const offlineBar = useOfflineBar();
+  const [loadCause, setLoadCause] = useState<LoadFailedCause>("offline");
   const mainRef = useRef<HTMLDivElement>(null);
   /** While a tab's scroll runs, the scroll does not move the current tab. */
   const jumping = useRef<number | null>(null);
@@ -56,7 +60,8 @@ export default function SheetScreen({ characterId, sample = false }: { character
     try {
       setSheet(await sheetApi.getSheet(characterId));
       setPhase("ready");
-    } catch {
+    } catch (error) {
+      setLoadCause(failureCause(error));
       setPhase("error");
     }
   }, [characterId, sample]);
@@ -165,14 +170,14 @@ export default function SheetScreen({ characterId, sample = false }: { character
   const sessionBlocks = blocks.filter(
     (block): block is ResourceBlock => block.type === "resource" && block.reset.mode === "session",
   );
-  const refill = (targets: ResourceBlock[]) => {
+  const refill = (targets: ResourceBlock[], label: string) => {
     const changes = refills(targets);
     if (!changes.length) {
       setFullNote(`${listTitles(targets.map((b) => b.title))} ${targets.length === 1 ? "is" : "are"} already full.`);
       return;
     }
     setFullNote("");
-    play.setMany(changes);
+    play.setMany(changes, label);
     const titles = [...new Set(changes.map((c) => blocks.find((b) => b.id === c.blockId)?.title ?? ""))];
     setRefilled({ message: `${listTitles(titles)} refilled`, changes });
   };
@@ -180,8 +185,8 @@ export default function SheetScreen({ characterId, sample = false }: { character
   useEffect(() => {
     if (play.failure) setRefilled(null);
   }, [play.failure]);
-  const onNewSession = sample || !sessionBlocks.length ? undefined : () => refill(sessionBlocks);
-  const onResetResource = sample ? undefined : (block: ResourceBlock) => refill([block]);
+  const onNewSession = sample || !sessionBlocks.length ? undefined : () => refill(sessionBlocks, "New session");
+  const onResetResource = sample ? undefined : (block: ResourceBlock) => refill([block], block.title);
   const pinned = blocks.some((block) => block.pinned);
 
   const backButton = (
@@ -216,8 +221,8 @@ export default function SheetScreen({ characterId, sample = false }: { character
   );
   const banner = (
     <>
-      {(restored || favoriteFailed || play.failure) && (
-        <div className={styles.banner}>
+      {(restored || favoriteFailed) && (
+        <div className={offlineBar ? `${styles.banner} ${styles.bannerLow}` : styles.banner}>
           {restored && (
             <InlineNotice tone="success" title="Draft restored" body="Signed in and saved. Nothing was lost." />
           )}
@@ -230,41 +235,33 @@ export default function SheetScreen({ characterId, sample = false }: { character
               onAction={() => setFavoriteFailed(false)}
             />
           )}
-          {play.failure && (
-            // WAITING ON DESIGN: 8. Contract 3 and v1.1, 5: back to the last saved value, Retry sends it again.
-            <InlineNotice
-              tone="error"
-              title="That change did not save"
-              body={play.failure.message}
-              actionLabel="Retry"
-              onAction={play.failure.retry}
-              onDismiss={play.dismissFailure}
-            />
-          )}
         </div>
       )}
     </>
   );
-  const states = (
-    <>
-      {phase === "loading" && (
-        <div className={styles.loading} role="status">
-          <Spinner size={28} />
-          <span className={styles.hidden}>Opening the sheet</span>
-        </div>
+  // Page 8, P3 to P6 (PW1 at wide): at the foot, "Health not saved" with Retry, then "Saving Health".
+  const playNotice = (play.failure || play.saving) && (
+    <div className={styles.playNotice}>
+      {play.failure ? (
+        <InlineNotice
+          tone="error"
+          title={play.failure.title}
+          body={play.failure.body}
+          actionLabel="Retry"
+          onAction={play.failure.retry}
+        />
+      ) : (
+        play.saving && <InlineNotice tone="info" title={play.saving.title} body={play.saving.body} />
       )}
-      {phase === "error" && (
-        <div className={styles.loadError}>
-          <InlineNotice
-            tone="error"
-            title="Could not open this character"
-            body="Check your connection and try again."
-            actionLabel="Retry"
-            onAction={load}
-          />
-        </div>
-      )}
-    </>
+    </div>
+  );
+  const offline = <OfflineBanner state={offlineBar} className={offlineBar ? styles.offlineBar : undefined} />;
+  // Page 8, F5 A (the skeleton) while it loads; F7 and F8 (FW3 at wide) when it could not.
+  const skeleton = phase === "loading" && <SheetSkeleton wide={wide} />;
+  const loadFailed = phase === "error" && (
+    <div className={styles.loadError}>
+      <LoadFailed context="sheet" cause={loadCause} onRetry={load} />
+    </div>
   );
   const liveAndToast = (
     <>
@@ -278,7 +275,7 @@ export default function SheetScreen({ characterId, sample = false }: { character
             message={refilled.message}
             durationMs={6000}
             onUndo={() => {
-              play.setMany(refilled.changes.map((c) => ({ ...c, from: c.to, to: c.from })));
+              play.setMany(refilled.changes.map((c) => ({ ...c, from: c.to, to: c.from })), "Undo");
               setRefilled(null);
             }}
             onDismiss={() => setRefilled(null)}
@@ -291,7 +288,7 @@ export default function SheetScreen({ characterId, sample = false }: { character
   if (wide) {
     return (
       <AppColumn size="page" className={styles.column}>
-        <div className={styles.wide}>
+        <div className={offlineBar ? `${styles.wide} ${styles.wideOffline}` : styles.wide}>
           <aside className={styles.wideArt}>
             {sheet?.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element -- a portrait from the character, any host
@@ -302,12 +299,13 @@ export default function SheetScreen({ characterId, sample = false }: { character
             <div className={styles.shade} aria-hidden="true" />
             {sheet && phase === "ready" && <div className={`${styles.band} ${styles.bandTall}`}>{identityStack}</div>}
           </aside>
+          {skeleton}
           {backButton}
           {topButtons}
           <div className={styles.wideMain} ref={mainRef}>
             <div className={styles.wideContent}>
               {banner}
-              {states}
+              {loadFailed}
               {sheet && phase === "ready" && (
                 <>
                   <QuickAccessStrip blocks={blocks} onSetResource={onSetResource} onNewSession={onNewSession} />
@@ -329,6 +327,8 @@ export default function SheetScreen({ characterId, sample = false }: { character
               )}
             </div>
           </div>
+          {offline}
+          {playNotice}
           {liveAndToast}
         </div>
       </AppColumn>
@@ -351,9 +351,10 @@ export default function SheetScreen({ characterId, sample = false }: { character
         {backButton}
         {topButtons}
 
+        {skeleton}
+        {offline}
         {banner}
-
-        {states}
+        {loadFailed}
 
         {sheet && phase === "ready" && stage === "image" && (
           <div
@@ -420,6 +421,7 @@ export default function SheetScreen({ characterId, sample = false }: { character
             </div>
           </section>
         )}
+        {playNotice}
         {liveAndToast}
       </div>
     </AppColumn>

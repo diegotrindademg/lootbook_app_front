@@ -5,6 +5,7 @@ import BlockIcon, { BlockIconBox } from "@/shared/components/ui/BlockIcon";
 import type { ChoiceBlock, ListBlock, ResourceBlock, SheetBlock, StatSetBlock, TextBlock } from "../../types";
 import { resetNote } from "../../utils/blocks";
 import { formatDerived } from "../../utils/derived";
+import DerivedUnknown from "./DerivedUnknown";
 import { Gauge, Pips, StepButton } from "./ResourceParts";
 import styles from "./BlockViews.module.css";
 
@@ -61,10 +62,7 @@ function StatSetView({ block }: { block: StatSetBlock }) {
               </span>
             ) : entry.derived ? (
               // Contract 3: a derived value that cannot be worked out shows "?", never a crash.
-              <span className={styles.derivedPill}>
-                <span aria-hidden="true">?</span>
-                <span className={styles.hidden}>, derived value cannot be worked out</span>
-              </span>
+              <DerivedUnknown label={entry.derived.label || `${entry.name || entry.abbr} modifier`} />
             ) : (
               <span className={styles.derivedSpacer} aria-hidden="true" />
             )}

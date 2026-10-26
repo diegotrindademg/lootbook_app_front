@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthSession } from "@/features/auth/state/AuthSessionContext";
 import { announceOnArrival } from "@/features/auth/utils/arrivalNotice";
 import AppColumn from "@/shared/components/layout/AppColumn";
+import OfflineBanner, { useOfflineBar } from "@/shared/components/feedback/OfflineBanner";
 import NavBar from "@/shared/components/layout/NavBar";
 import TabBar from "@/shared/components/layout/TabBar";
 import Icon from "@/shared/components/ui/Icon";
@@ -24,6 +25,7 @@ export default function SettingsScreen() {
   const session = useAuthSession();
   const { status, user } = session;
   const [leaving, setLeaving] = useState(false);
+  const offlineBar = useOfflineBar();
 
   const onSignOut = async () => {
     setLeaving(true);
@@ -45,6 +47,7 @@ export default function SettingsScreen() {
           signInHref="/sign-in?returnTo=%2Fsettings"
           profileHref="/settings"
         />
+        <OfflineBanner state={offlineBar} className={offlineBar ? styles.offlineBar : undefined} />
         <div className={styles.column}>
           <h1 className={styles.title}>Settings</h1>
 

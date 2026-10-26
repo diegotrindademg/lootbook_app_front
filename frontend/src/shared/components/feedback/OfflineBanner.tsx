@@ -5,14 +5,14 @@ import Icon from "@/shared/components/ui/Icon";
 import { useOnline } from "@/shared/hooks/useOnline";
 import styles from "./OfflineBanner.module.css";
 
+export type OfflineBarState = "offline" | "back-online" | null;
+
 /**
- * The offline banner (contract 3 and v1.1, 4): while the device is offline, "You are offline. Changes
- * will not save until you are back."; when it comes back, "Back online" for three seconds. On every
- * screen, signed in or not. The live region is always there, so a screen reader hears both.
- * WAITING ON DESIGN: 8. A plain pill above the tab bar (at wide, at the foot of the page) until page 8
- * lands with its part and its tagged position.
+ * Whether the offline bar shows, and which state: "offline" while the device is offline, then
+ * "back-online" for three seconds once it is back (Figma page 8, O6, O7). A screen that places the bar
+ * reads this too, to make room for it.
  */
-export default function OfflineBanner() {
+export function useOfflineBar(): OfflineBarState {
   const online = useOnline();
   const [backOnline, setBackOnline] = useState(false);
   const was = useRef(online);
@@ -29,19 +29,35 @@ export default function OfflineBanner() {
     return () => window.clearTimeout(timer);
   }, [online]);
 
+  if (!online) return "offline";
+  return backOnline ? "back-online" : null;
+}
+
+/**
+ * The offline banner, Kind=Bar (Figma "Offline banner" 2425:26873, page 8's pick O1 A): full width under
+ * the nav bar or the editor header, "You are offline. Changes will not save until you are back."
+ * (contract v1.1, 4), then "Back online" in teal for three seconds. Not dismissable. The status region
+ * is always in the page, so a screen reader hears both; empty, it takes no room.
+ */
+export default function OfflineBanner({ state, className }: { state: OfflineBarState; className?: string }) {
+  const classes = [styles.region, state && styles.bar, state === "back-online" && styles.back, className]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <div className={styles.region} role="status" aria-live="polite">
-      {!online && (
-        <p className={styles.banner}>
-          <Icon name="alert" size={18} className={styles.offlineIcon} />
-          You are offline. Changes will not save until you are back.
-        </p>
+    <div className={classes} role="status">
+      {state === "offline" && (
+        <>
+          <Icon name="offline" size={18} className={styles.icon} />
+          <p className={styles.text}>
+            <strong className={styles.lead}>You are offline.</strong> Changes will not save until you are back.
+          </p>
+        </>
       )}
-      {online && backOnline && (
-        <p className={styles.banner}>
-          <Icon name="check" size={18} className={styles.onlineIcon} />
-          Back online
-        </p>
+      {state === "back-online" && (
+        <>
+          <Icon name="check" size={18} className={styles.backIcon} />
+          <p className={`${styles.text} ${styles.backText}`}>Back online</p>
+        </>
       )}
     </div>
   );

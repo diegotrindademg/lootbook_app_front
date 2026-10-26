@@ -6,6 +6,8 @@ import { useAuthSession } from "@/features/auth/state/AuthSessionContext";
 import ActionSheet, { type SheetAction } from "@/shared/components/overlay/ActionSheet";
 import { ConfirmDialog, PromptDialog } from "@/shared/components/overlay/Dialog";
 import AppColumn from "@/shared/components/layout/AppColumn";
+import OfflineBanner, { useOfflineBar } from "@/shared/components/feedback/OfflineBanner";
+import LoadFailed from "@/shared/components/feedback/LoadFailed";
 import NavBar from "@/shared/components/layout/NavBar";
 import TabBar from "@/shared/components/layout/TabBar";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
@@ -57,6 +59,7 @@ export default function CharacterScreen() {
 
   const [tab, setTab] = useState<CharacterListTab>("Recent");
   const [query, setQuery] = useState("");
+  const offlineBar = useOfflineBar();
   const [searchFocused, setSearchFocused] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -147,15 +150,14 @@ export default function CharacterScreen() {
       <CarouselSkeleton />
     );
   } else if (list.status === "error") {
-    well = (
-      <div className={styles.wellNotice}>
-        <InlineNotice
-          title="Could not load your characters"
-          body="Check your connection and try again."
-          actionLabel="Retry"
-          onAction={list.reload}
-        />
-      </div>
+    // Page 8, F2 and F3 (FW1 at wide): the card that failed to load takes the first card's place.
+    const failed = <LoadFailed context="list" cause={list.errorCause} onRetry={list.reload} />;
+    well = wide ? (
+      <ul className={styles.grid}>
+        <li>{failed}</li>
+      </ul>
+    ) : (
+      failed
     );
   } else if (visible.length > 0) {
     // S5: the list for this tab.
@@ -199,6 +201,7 @@ export default function CharacterScreen() {
           signInHref="/sign-in?returnTo=%2F"
           profileHref="/settings"
         />
+        <OfflineBanner state={offlineBar} className={offlineBar ? styles.offlineBar : undefined} />
         <div className={styles.controls}>
           <CharacterSearchField
             value={query}

@@ -1,0 +1,143 @@
+/*
+ * Figma "Sheet skeleton", Panel=Down: art Surface/Skeleton #202020, a 160 wide teal shimmer, the band
+ * rgba(11 13 19 / 60%) 172 high at the foot with three lines at 24, 50 and 92 (140 x 14, 220 x 28,
+ * 260 x 14), 20 from the left. The shimmer moves as slice 1's card skeleton does.
+ */
+.skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  background: linear-gradient(180deg, var(--color-surface-page-top) 0%, var(--color-surface-page-bottom) 100%);
+}
+
+.art {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: #202020;
+}
+
+.shimmer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 160px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-accent-default) 14%, transparent) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.band {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: calc(172px + env(safe-area-inset-bottom));
+  background: rgb(11 13 19 / 60%);
+}
+
+.line {
+  position: absolute;
+  left: 20px;
+  background: #202020;
+}
+
+.eyebrow {
+  top: 24px;
+  width: 140px;
+  height: 14px;
+  border-radius: 7px;
+}
+
+.name {
+  top: 50px;
+  width: 220px;
+  height: 28px;
+  border-radius: 10px;
+}
+
+.subtitle {
+  top: 92px;
+  width: 260px;
+  height: 14px;
+  border-radius: 7px;
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-160px);
+  }
+  100% {
+    transform: translateX(100vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    left: 120px;
+    animation: none;
+  }
+}
+
+/* Wide (FW2): the art in the left 480, the content column 864 wide at 528, 104. */
+.wide .art {
+  flex: 0 0 480px;
+}
+
+.wide .band {
+  height: 128px;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 864px;
+  margin: 0 auto;
+  padding: 104px 48px 0;
+  box-sizing: content-box;
+}
+
+.strip,
+.tabs,
+.block {
+  display: block;
+  background: #202020;
+}
+
+.strip {
+  height: 150px;
+  border-radius: 20px;
+}
+
+.tabs {
+  height: 44px;
+  border-radius: 22px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.block {
+  height: 90px;
+  border-radius: 16px;
+}

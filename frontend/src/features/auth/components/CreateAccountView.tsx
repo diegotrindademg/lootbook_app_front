@@ -36,7 +36,7 @@ export default function CreateAccountView() {
       setError(
         isAuthError(caught, "email-taken")
           ? authNotices.emailTaken(Boolean(draft), () => router.push("/sign-in"))
-          : authNotices.failed(caught),
+          : authNotices.failed(caught, { onRetry: submit, doing: "create-account" }),
       );
     }
   };

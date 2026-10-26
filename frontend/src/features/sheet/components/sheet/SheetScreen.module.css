@@ -134,21 +134,15 @@ button.circle::after {
   gap: 10px;
 }
 
-.loading {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-accent-default);
-}
-
+/* Page 8, F7 and F8: the failed card where the blocks would be, 20 from each edge, top 520 (496 here). */
 .loadError {
   position: absolute;
-  top: 50%;
+  top: calc(496px + env(safe-area-inset-top));
   right: 20px;
   left: 20px;
-  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
 }
 
 .hidden {
@@ -398,16 +392,70 @@ button.circle::after {
     touch-action: auto;
   }
 
-  .loadError {
-    right: 0;
-    left: 0;
-  }
-
   .toast {
     right: auto;
     bottom: 40px;
     left: calc(480px + (100% - 480px) / 2);
     width: 335px;
     transform: translateX(-50%);
+  }
+}
+
+/* Page 8, O2 and O3: the offline bar over the art, under the buttons, at 104 (80 here). */
+.offlineBar {
+  position: absolute;
+  top: calc(80px + env(safe-area-inset-top));
+  right: 0;
+  left: 0;
+  z-index: 15;
+}
+
+/* With the bar, the top notices sit under it (it wraps to 60 on a phone). */
+.bannerLow {
+  top: calc(148px + env(safe-area-inset-top));
+}
+
+/* Page 8, P3 to P6: a change that did not save, at the foot, 20 from each edge, 24 from the bottom. */
+.playNotice {
+  position: absolute;
+  right: 20px;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  left: 20px;
+  z-index: 25;
+}
+
+@media (min-width: 1024px) {
+  /* FW3: the failed card centred in the content column, at 300. */
+  .loadError {
+    position: static;
+    margin-top: 196px;
+  }
+
+  /* OW2: the bar across the top of the content column; the buttons and the column move down by it. */
+  .offlineBar {
+    top: 0;
+    left: 480px;
+  }
+
+  .wideOffline .edit,
+  .wideOffline .favorite,
+  .wideOffline .samplePill {
+    top: 84px;
+  }
+
+  .wideOffline .wideContent {
+    padding-top: 148px;
+  }
+
+  .bannerLow {
+    top: auto;
+  }
+
+  /* PW1: 480 wide, at the right of the content column, 32 from the foot. */
+  .playNotice {
+    right: 48px;
+    bottom: 32px;
+    left: auto;
+    width: 480px;
   }
 }

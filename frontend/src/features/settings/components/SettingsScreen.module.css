@@ -182,3 +182,14 @@
     padding: 32px 0 0;
   }
 }
+
+/* Page 7, A7 offline (2425:36833): the bar under the nav bar as on the list (page 8, O1 A). */
+.offlineBar {
+  margin: 4px 0 -4px;
+}
+
+@media (min-width: 1024px) {
+  .offlineBar {
+    margin: 8px 0 4px;
+  }
+}

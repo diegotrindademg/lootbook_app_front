@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { failureCause, type LoadFailedCause } from "@/shared/components/feedback/LoadFailed";
 import { charactersApi } from "../api/charactersApi";
 import type { CharacterSummary } from "../types";
 
@@ -14,6 +15,7 @@ export function useCharacterList(signedIn: boolean | null) {
   const [status, setStatus] = useState<CharacterListStatus>("loading");
   const [characters, setCharacters] = useState<CharacterSummary[]>([]);
   const [loadCount, setLoadCount] = useState(0);
+  const [errorCause, setErrorCause] = useState<LoadFailedCause>("offline");
 
   useEffect(() => {
     setCharacters([]);
@@ -34,8 +36,10 @@ export function useCharacterList(signedIn: boolean | null) {
         setCharacters(list);
         setStatus("ready");
       },
-      () => {
-        if (active) setStatus("error");
+      (error) => {
+        if (!active) return;
+        setErrorCause(failureCause(error));
+        setStatus("error");
       },
     );
     return () => {
@@ -111,5 +115,5 @@ export function useCharacterList(signedIn: boolean | null) {
     },
   };
 
-  return { status, characters, reload, actions, failure, clearFailure: () => setFailure(null) };
+  return { status, errorCause, characters, reload, actions, failure, clearFailure: () => setFailure(null) };
 }

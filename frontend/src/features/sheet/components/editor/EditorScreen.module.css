@@ -229,3 +229,35 @@
     padding: 0 0 24px;
   }
 }
+
+/*
+ * Page 8, O4: the offline bar under the header (at 60 here), everything under it moves down by the bar.
+ * Wide (OW3): across the top of the page, the column moves down by 44.
+ */
+.offlineBar {
+  margin-top: 6px;
+}
+
+/* The bar wraps to two lines on a phone: 60 high, 6 above it. */
+.offline .saveHint {
+  top: calc(188px + env(safe-area-inset-top));
+}
+
+@media (min-width: 1024px) {
+  .offline {
+    padding-top: 44px;
+  }
+
+  .offlineBar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 11;
+    margin: 0;
+  }
+
+  .offline .saveHint {
+    top: 186px;
+  }
+}

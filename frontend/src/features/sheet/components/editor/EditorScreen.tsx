@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthSession } from "@/features/auth/state/AuthSessionContext";
+import OfflineBanner, { useOfflineBar } from "@/shared/components/feedback/OfflineBanner";
 import AppColumn from "@/shared/components/layout/AppColumn";
 import BottomSheet from "@/shared/components/overlay/BottomSheet";
 import { ConfirmDialog } from "@/shared/components/overlay/Dialog";
@@ -61,6 +62,7 @@ export default function EditorScreen({ characterId }: { characterId: string | nu
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<SaveNotice>(null);
   const [resume, setResume] = useState(false);
+  const offlineBar = useOfflineBar();
   const baseRevision = useRef(0);
   const original = useRef<SheetDraft | null>(null);
   const autoSaved = useRef(false);
@@ -203,7 +205,7 @@ export default function EditorScreen({ characterId }: { characterId: string | nu
 
   return (
     <AppColumn size="page" className={styles.column}>
-      <div className={styles.screen} inert={overlayOpen || undefined}>
+      <div className={offlineBar ? `${styles.screen} ${styles.offline}` : styles.screen} inert={overlayOpen || undefined}>
         <header className={styles.top}>
           <button type="button" className={styles.cancel} onClick={cancel} disabled={saving}>
             Cancel
@@ -219,6 +221,7 @@ export default function EditorScreen({ characterId }: { characterId: string | nu
             {saving ? "Saving" : "Save"}
           </GhostPill>
         </header>
+        <OfflineBanner state={offlineBar} className={offlineBar ? styles.offlineBar : undefined} />
         {!canSave && !saving && phase === "ready" && (
           <p id="save-hint" className={styles.saveHint}>
             {saveHint}

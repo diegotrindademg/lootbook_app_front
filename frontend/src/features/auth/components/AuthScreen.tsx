@@ -1,5 +1,6 @@
 import GoblinSymbol from "@/assets/goblinsymbol.svg";
 import LootbookLogo from "@/assets/lootbook-logo-horizontal.svg";
+import OfflineBanner, { useOfflineBar } from "@/shared/components/feedback/OfflineBanner";
 import AppColumn from "@/shared/components/layout/AppColumn";
 import Icon from "@/shared/components/ui/Icon";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
@@ -36,9 +37,12 @@ export default function AuthScreen({
   children,
 }: AuthScreenProps) {
   const compact = Boolean(error);
+  const offlineBar = useOfflineBar();
 
   return (
     <AppColumn size="page" className={styles.page}>
+      {/* Page 8, O5: no nav bar here, so the offline bar sits at the top and the screen moves down. */}
+      <OfflineBanner state={offlineBar} className={offlineBar ? styles.offlineBar : undefined} />
       {/* Wide (Figma page 2 wide frames): the logo top left, the screen as a centred 375 card. */}
       <LootbookLogo className={styles.logo} role="img" aria-label="Lootbook" />
       <div className={styles.card}>

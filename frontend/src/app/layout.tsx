@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Acme, Open_Sans } from "next/font/google";
 import ArrivalNotice from "@/features/auth/components/ArrivalNotice";
 import { AuthSessionProvider } from "@/features/auth/state/AuthSessionContext";
-import OfflineBanner from "@/shared/components/feedback/OfflineBanner";
 import "./globals.css";
 
 const acme = Acme({
@@ -35,7 +34,6 @@ export default function RootLayout({
         <AuthSessionProvider>
           {children}
           <ArrivalNotice />
-          <OfflineBanner />
         </AuthSessionProvider>
       </body>
     </html>

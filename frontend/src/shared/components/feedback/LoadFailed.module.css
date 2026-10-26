@@ -1,0 +1,78 @@
+/* Figma "Load failed": icon 32, title, body and Retry centred, 12 apart, padding 0 24. */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 24px;
+  text-align: center;
+}
+
+/* Context=List: the empty card's dashed outline, 292 x 397, radius 28. */
+.list {
+  width: 292px;
+  height: 397px;
+  border: var(--border-width-hairline) dashed rgb(255 255 255 / 35%);
+  border-radius: 28px;
+  background: rgb(20 20 20 / 50%);
+}
+
+/* Context=Sheet: Surface/Card, 335 wide, 260 high, radius 20. */
+.sheet {
+  width: 100%;
+  max-width: 335px;
+  height: 260px;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: 20px;
+  background: var(--color-surface-sunken);
+}
+
+.offlineIcon {
+  flex-shrink: 0;
+  color: var(--color-content-supporting);
+}
+
+.serverIcon {
+  flex-shrink: 0;
+  color: var(--color-feedback-error);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-content-primary);
+}
+
+.body {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  color: var(--color-content-subtle);
+}
+
+/* Slice 1's border button, small: 44 high, Acme 16 in Teal-20, a teal ring and wash. */
+.retry {
+  height: 44px;
+  padding: 0 20px;
+  border: 1.5px solid var(--color-teal-60);
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgb(1 110 92 / 20%) 0%, rgb(2 212 177 / 20%) 100%);
+  font-family: var(--font-family-display);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--color-teal-20);
+  cursor: pointer;
+}
+
+.retry:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

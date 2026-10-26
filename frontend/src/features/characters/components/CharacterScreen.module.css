@@ -87,3 +87,14 @@
   padding: 0;
   list-style: none;
 }
+
+/* Page 8, O1 A: the bar 4 under the nav bar, the field 24 under the bar. Wide (OW1): 8 under, the tabs 28 under. */
+.offlineBar {
+  margin: 4px 0 -4px;
+}
+
+@media (min-width: 1024px) {
+  .offlineBar {
+    margin: 8px 0 4px;
+  }
+}

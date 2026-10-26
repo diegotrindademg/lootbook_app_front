@@ -233,3 +233,14 @@
     padding-top: 84px;
   }
 }
+
+/* Page 8, OW4: at wide the offline bar runs across the top of the page; the card stays centred. */
+@media (min-width: 1024px) {
+  .offlineBar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
+  }
+}
