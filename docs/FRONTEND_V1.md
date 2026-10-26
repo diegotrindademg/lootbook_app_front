@@ -82,7 +82,8 @@ yours, so this pull request leaves it as it is.
 | `/characters/[id]/edit` | The editor |
 | `/characters/sample` | The read-only sample sheet |
 | `/settings` | Account (email, Sign out) and the app version |
-| `/equipments`, `/equipments/create` | "Equipment is on its way" (v1.0); Create starts a character |
+| `/equipments` | "Equipment is on its way" (v1.0); Create starts a character, Search opens Characters with search focused |
+| `/equipments/create` | Redirects to `/characters/create` |
 
 `frontend/app/` holds one-line re-exports of `src/app` (Next gives a root `app/` precedence). Your tidy-up
 spec 7, item 2.3, deletes it; that still works after this pull request (section 7).
@@ -93,6 +94,7 @@ spec 7, item 2.3, deletes it; that still works after this pull request (section 
 | `features/characters` | The list, cards, card menu, search, splash; the `CharactersApi` seam |
 | `features/sheet` | Editor, block library, block configuration, the sheet, play; the `SheetApi` seam, the draft on the device |
 | `features/settings` | Settings |
+| `features/equipments` | The v1.0 Equipments tab: the quiet empty card and one line (Figma page 1, Flow 16) |
 | `shared` | `lootbookRequest` (every back end call, adds the token), tab bar, nav bar, overlays, offline bar, icons |
 
 **The three seams.** Each screen imports one object, and that object is the fake or the real adapter:

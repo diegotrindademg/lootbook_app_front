@@ -1,5 +1,6 @@
-import PlaceholderScreen from "@/shared/components/layout/PlaceholderScreen";
+import { redirect } from "next/navigation";
 
+/** Equipment comes in the next version; Create on the Equipments tab starts a character (contract v1.1, 1). */
 export default function NewEquipmentPage() {
-  return <PlaceholderScreen title="New equipment" activeTab="equipments" createHref="/equipments/create" />;
+  redirect("/characters/create");
 }

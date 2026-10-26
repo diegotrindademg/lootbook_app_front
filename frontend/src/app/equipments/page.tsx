@@ -1,5 +1,5 @@
-import PlaceholderScreen from "@/shared/components/layout/PlaceholderScreen";
+import EquipmentsScreen from "@/features/equipments/components/EquipmentsScreen";
 
 export default function EquipmentsPage() {
-  return <PlaceholderScreen title="Equipments" activeTab="equipments" createHref="/equipments/create" />;
+  return <EquipmentsScreen />;
 }

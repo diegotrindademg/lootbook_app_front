@@ -1,0 +1,48 @@
+/*
+ * Figma page 1, Flow 16, E1 (2443:3894) without the status bar (every top 24 higher): the card 292x397 at
+ * 42, 146, so 93 under the 53 nav bar; the line 16 under the card, 270 wide, centred. Wide (2443:4189):
+ * the card centred at 284, so 180 under the 104 nav bar; the line 420 wide.
+ */
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom));
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 93px;
+}
+
+/* Figma: Open Sans 400/14, line height 20, Neutral-50 #A1A1A1 (content-muted), centred. */
+.line {
+  width: 270px;
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  text-align: center;
+  color: var(--color-content-muted);
+}
+
+/* The offline bar under the nav bar, as on the list and Settings (page 8, O1 A). */
+.offlineBar {
+  margin: 4px 0 -4px;
+}
+
+@media (min-width: 1024px) {
+  .content {
+    margin-top: 180px;
+  }
+
+  .line {
+    width: 420px;
+  }
+
+  .offlineBar {
+    margin: 8px 0 4px;
+  }
+}
