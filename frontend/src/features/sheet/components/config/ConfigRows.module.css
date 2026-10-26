@@ -87,3 +87,39 @@ button.name:focus-visible {
   line-height: 18px;
   color: var(--color-content-supporting);
 }
+
+/* Figma "Config / Toggle row": padding 13 15, radius 14, title 14/600, line 14/20 muted. */
+.toggleCard {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: 14px;
+  background: var(--color-surface-sunken);
+}
+
+.toggleCopy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.toggleTitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 19px;
+  color: var(--color-content-primary);
+}
+
+.toggleBody {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  color: var(--color-content-subtle);
+}

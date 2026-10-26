@@ -7,11 +7,11 @@ import { BLOCK_ICON_KEYS, type BlockDensity, type SheetBlock } from "../../types
 import { iconName } from "../../utils/blocks";
 import { SectionLabel } from "../controls/Field";
 import Segmented from "../controls/Segmented";
-import Toggle from "../controls/Toggle";
 import ChoiceConfig from "./ChoiceConfig";
 import ListConfig from "./ListConfig";
 import ResourceConfig from "./ResourceConfig";
 import StatSetConfig from "./StatSetConfig";
+import { ConfigHint, ToggleCard } from "./ConfigRows";
 import TextConfig from "./TextConfig";
 import styles from "./BlockConfigSheet.module.css";
 
@@ -28,21 +28,29 @@ type BlockConfigSheetProps = {
  */
 export default function BlockConfigSheet({ block, onChange, onRemove, onDone }: BlockConfigSheetProps) {
   const set = (patch: Partial<SheetBlock>) => onChange({ ...block, ...patch } as SheetBlock);
+  const titleMissing = !block.title.trim();
 
   return (
     <div className={styles.config}>
       <div className={styles.header}>
         <BlockIconBox icon={block.icon} size={40} />
         <input
-          className={styles.title}
+          className={titleMissing ? `${styles.title} ${styles.titleError}` : styles.title}
           type="text"
           value={block.title}
           aria-label="Block title"
+          aria-invalid={titleMissing || undefined}
+          aria-describedby={titleMissing ? "config-title-error" : undefined}
           maxLength={80}
           onChange={(event) => set({ title: event.target.value })}
         />
         <span className={styles.type}>{BLOCK_TYPE_LABEL[block.type]}</span>
       </div>
+      {titleMissing && (
+        <p id="config-title-error" className={styles.titleErrorText} role="alert">
+          A block needs a title
+        </p>
+      )}
 
       <div className={styles.body}>
         <SectionLabel id="config-icon-label">Icon</SectionLabel>
@@ -62,25 +70,25 @@ export default function BlockConfigSheet({ block, onChange, onRemove, onDone }: 
           ))}
         </div>
 
-        <div className={styles.card}>
-          <div className={styles.cardCopy}>
-            <p className={styles.cardTitle}>Pin to quick access</p>
-            <p className={styles.cardBody}>Reachable on the sheet without opening a tab</p>
-          </div>
-          <Toggle on={block.pinned} onChange={(pinned) => set({ pinned })} label="Pin to quick access" />
-        </div>
+        <ToggleCard
+          title="Pin to quick access"
+          body="Reachable on the sheet without opening a tab"
+          on={block.pinned}
+          onChange={(pinned) => set({ pinned })}
+        />
 
-        {/* WAITING ON DESIGN: 5 - Blocks draws density. Phone ignores it; wide pairs half blocks. */}
-        <SectionLabel>Width on wide screens</SectionLabel>
+        {/* Figma page 5, B7 A: density is shown on phone too. */}
+        <SectionLabel>Density</SectionLabel>
         <Segmented<BlockDensity>
-          label="Width on wide screens"
+          label="Density"
           options={[
-            ["full", "Full"],
-            ["half", "Half"],
+            ["full", "Full width"],
+            ["half", "Half width"],
           ]}
           value={block.density}
           onChange={(density) => set({ density })}
         />
+        <ConfigHint>Half pairs with the next half block in two columns on the sheet.</ConfigHint>
 
         {block.type === "choice" && <ChoiceConfig block={block} onChange={onChange} />}
         {block.type === "stats" && <StatSetConfig block={block} onChange={onChange} />}

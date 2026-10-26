@@ -5,6 +5,7 @@ import Icon from "@/shared/components/ui/Icon";
 import { Field } from "../controls/Field";
 import GhostPill from "../controls/GhostPill";
 import RoundButton from "../controls/RoundButton";
+import Toggle from "../controls/Toggle";
 import styles from "./ConfigRows.module.css";
 
 type EditorRowProps = {
@@ -128,4 +129,33 @@ export function DetailField({ label, children }: { label: string; children: Reac
       {children}
     </div>
   );
+}
+
+/** Figma "Config / Toggle row": a setting with a switch on a card, its line under it wrapping. */
+export function ToggleCard({
+  title,
+  body,
+  on,
+  onChange,
+}: {
+  title: string;
+  body?: string;
+  on: boolean;
+  onChange: (on: boolean) => void;
+}) {
+  return (
+    <div className={styles.toggleCard}>
+      <div className={styles.toggleCopy}>
+        <p className={styles.toggleTitle}>{title}</p>
+        {body && <p className={styles.toggleBody}>{body}</p>}
+      </div>
+      <Toggle on={on} onChange={onChange} label={title} />
+    </div>
+  );
+}
+
+/** A quiet line saying a list is as long as it can be (the limits in sheet-document.md 2.6). */
+export function LimitHint({ count, max, noun }: { count: number; max: number; noun: string }) {
+  if (count < max) return null;
+  return <p className={styles.hint}>{`${max} ${noun}, the most a block can hold.`}</p>;
 }

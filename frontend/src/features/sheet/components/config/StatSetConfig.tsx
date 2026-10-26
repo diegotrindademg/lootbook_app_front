@@ -20,7 +20,7 @@ import GhostPill from "../controls/GhostPill";
 import RoundButton from "../controls/RoundButton";
 import Segmented from "../controls/Segmented";
 import Toggle from "../controls/Toggle";
-import { ConfigHint, DetailField } from "./ConfigRows";
+import { ConfigHint, DetailField, LimitHint } from "./ConfigRows";
 import styles from "./TypeConfig.module.css";
 
 type Props = { block: StatSetBlock; onChange: (block: StatSetBlock) => void };
@@ -86,6 +86,7 @@ export default function StatSetConfig({ block, onChange }: Props) {
             onRemove={() => set({ entries: block.entries.filter((e) => e.localId !== entry.localId) })}
           />
         ))}
+        <LimitHint count={block.entries.length} max={40} noun="values" />
         {block.entries.length < 40 && (
           <div>
             <GhostPill

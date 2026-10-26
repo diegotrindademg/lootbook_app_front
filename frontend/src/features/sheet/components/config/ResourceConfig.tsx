@@ -5,6 +5,7 @@ import GhostPill from "../controls/GhostPill";
 import RoundButton from "../controls/RoundButton";
 import Segmented from "../controls/Segmented";
 import Stepper from "../controls/Stepper";
+import { ConfigHint, DetailField, LimitHint } from "./ConfigRows";
 import styles from "./TypeConfig.module.css";
 
 type ResetMode = ResetRule["mode"];
@@ -85,6 +86,7 @@ export default function ResourceConfig({
                 )}
               </div>
             ))}
+            <LimitHint count={block.tiers.length} max={12} noun="tiers" />
             {block.tiers.length < 12 && (
               <div>
                 <GhostPill
@@ -122,19 +124,27 @@ export default function ResourceConfig({
         options={[
           ["manual", "Manual"],
           ["session", "Each session"],
-          ["label", "Label"],
+          ["label", "Custom"],
         ]}
         value={block.reset.mode}
         onChange={setReset}
       />
       {block.reset.mode === "label" && (
-        <Field
-          label="Resets on"
-          value={block.reset.label}
-          maxLength={80}
-          placeholder="For example: dawn"
-          onChange={(event) => set({ reset: { mode: "label", label: event.target.value } })}
-        />
+        // Figma page 5, R8 to R11: an empty label falls back to Manual when the sheet is saved.
+        <DetailField label="When does it reset?">
+          <Field
+            label="When does it reset?"
+            value={block.reset.label}
+            maxLength={80}
+            placeholder="a full night's rest"
+            onChange={(event) => set({ reset: { mode: "label", label: event.target.value } })}
+          />
+          <ConfigHint>
+            {block.reset.label.trim()
+              ? `On the sheet: "Resets on ${block.reset.label.trim()}"`
+              : "Left empty, it resets manually."}
+          </ConfigHint>
+        </DetailField>
       )}
     </>
   );

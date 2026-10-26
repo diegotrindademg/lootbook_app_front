@@ -2,7 +2,7 @@ import type { ChoiceBlock, ChoiceMode, ChoiceOption } from "../../types";
 import { mintId } from "../../utils/ids";
 import { Field, SectionLabel, TextAreaField } from "../controls/Field";
 import Segmented from "../controls/Segmented";
-import { AddRow, ConfigHint, DetailField, EditorRow } from "./ConfigRows";
+import { AddRow, ConfigHint, DetailField, EditorRow, LimitHint } from "./ConfigRows";
 import styles from "./TypeConfig.module.css";
 
 /**
@@ -129,6 +129,7 @@ export default function ChoiceConfig({ block, onChange }: { block: ChoiceBlock; 
                 onAdd={(name) => set({ options: [...block.options, { id: mintId("o"), name }] })}
               />
             )}
+            <LimitHint count={block.options.length} max={50} noun="options" />
             {!block.options.length && <ConfigHint>Options are yours to write, the app ships no catalogue.</ConfigHint>}
           </div>
         </>

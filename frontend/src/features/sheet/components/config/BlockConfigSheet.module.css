@@ -18,7 +18,7 @@
   min-width: 0;
   padding: 0 0 6px;
   border: none;
-  border-bottom: var(--border-width-hairline) solid color-mix(in srgb, var(--color-content-primary) 18%, transparent);
+  border-bottom: var(--border-width-hairline) solid color-mix(in srgb, var(--color-content-primary) 35%, transparent);
   border-radius: 0;
   outline: none;
   background: none;
@@ -163,4 +163,17 @@
 
 .done {
   width: 140px;
+}
+
+/* Figma "Config / Sheet head", Error: an empty title. */
+.titleError,
+.titleError:focus-visible {
+  border-bottom-color: var(--color-feedback-error);
+}
+
+.titleErrorText {
+  margin: 6px 20px 0;
+  font-size: var(--font-size-sm);
+  line-height: 19px;
+  color: var(--color-feedback-error);
 }

@@ -4,7 +4,7 @@ import { mintId } from "../../utils/ids";
 import { iconName } from "../../utils/blocks";
 import { Field, SectionLabel, TextAreaField } from "../controls/Field";
 import Toggle from "../controls/Toggle";
-import { AddRow, DetailField, EditorRow } from "./ConfigRows";
+import { AddRow, DetailField, EditorRow, LimitHint } from "./ConfigRows";
 import configStyles from "./BlockConfigSheet.module.css";
 import styles from "./TypeConfig.module.css";
 
@@ -115,6 +115,7 @@ export default function ListConfig({ block, onChange }: { block: ListBlock; onCh
             }
           />
         ))}
+        <LimitHint count={block.rows.length} max={200} noun="items" />
         {block.rows.length < 200 && (
           <AddRow
             label="Item"
