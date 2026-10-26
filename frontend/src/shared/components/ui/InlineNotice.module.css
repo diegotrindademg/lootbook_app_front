@@ -96,3 +96,33 @@
   outline: 2px solid var(--color-accent-default);
   outline-offset: 2px;
 }
+
+/* Drawn 28, the touch target is 44. */
+.dismiss {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: -4px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.dismiss::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+.dismiss:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: 2px;
+}

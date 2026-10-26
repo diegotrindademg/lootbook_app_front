@@ -1,3 +1,4 @@
+import { isOnline } from "@/shared/hooks/useOnline";
 import { AuthError } from "../types";
 
 export type AuthField = "email" | "password" | "confirm";
@@ -52,10 +53,16 @@ export const authNotices = {
       : "Type the same password in both fields.",
     field: "confirm",
   }),
-  failed: (error: unknown): AuthNotice =>
-    error instanceof AuthError && error.code === "not-connected"
-      ? { title: "Sign-in is not connected yet", body: "This build has no sign-in service behind it." }
-      : { title: "Could not reach the sign-in service", body: "Check your connection and try again." },
+  failed: (error: unknown): AuthNotice => {
+    if (error instanceof AuthError && error.code === "not-connected") {
+      return { title: "Sign-in is not connected yet", body: "This build has no sign-in service behind it." };
+    }
+    // WAITING ON DESIGN: 8. Signing in offline (contract 3): say so plainly; the draft stays on the device.
+    if (!isOnline()) {
+      return { title: "You are offline", body: "Signing in needs a connection. Try again when you are back." };
+    }
+    return { title: "Could not reach the sign-in service", body: "Check your connection and try again." };
+  },
 };
 
 export function isAuthError(error: unknown, code: AuthError["code"]) {

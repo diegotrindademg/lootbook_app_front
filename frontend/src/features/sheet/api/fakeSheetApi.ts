@@ -1,7 +1,7 @@
 import { authClient } from "@/features/auth/api/authClient";
 import { fakeCharacterList } from "@/features/characters/api/fakeCharactersApi";
 import { LootbookApiError } from "@/shared/api/lootbookRequest";
-import { fakeLatency } from "@/shared/config/devFakes";
+import { fakeFails, fakeLatency } from "@/shared/config/devFakes";
 import { FAKE_SHEET_BLOCKS } from "../data/fakeSheets";
 import type { DerivedLink, NoteRow, ResourceRow, SheetDerivedValue, SheetDocument, StatRow } from "../types";
 import { computeDerived } from "../utils/derived";
@@ -17,7 +17,8 @@ import { ResourceChangedError, SheetConflictError } from "./sheetErrors";
  * Triggers, for walking the failure states:
  * - a character whose name starts with "Offline" fails its first save (no connection); Retry works;
  * - a character whose name starts with "Stale" gets a conflict (409) on its first save;
- * - a resource whose block title starts with "Flaky" fails every change.
+ * - a resource whose block title starts with "Flaky" fails every change;
+ * - the `?fake=` switches in shared/config/devFakes.ts: fail-sheet, fail-save, fail-play, offline, slow.
  */
 
 type StoredRecord = {
@@ -118,6 +119,7 @@ function firstSaveFailure(name: string, existing: boolean): "offline" | "stale" 
 export const fakeSheetApi: SheetApi = {
   async getSheet(id) {
     await fakeLatency(READ_LATENCY_MS);
+    if (fakeFails("fail-sheet")) throw offline();
     const character = (await fakeCharacterList.read()).find((c) => c.id === id);
     if (!character) throw notFound(id);
     const store = await readStore();
@@ -134,6 +136,7 @@ export const fakeSheetApi: SheetApi = {
 
   async saveSheet(id, { name, baseRevision, payload }) {
     await fakeLatency(SAVE_LATENCY_MS);
+    if (fakeFails("fail-save")) throw offline();
     const store = await readStore();
     const record = store[id] ?? seedRecord(id);
     if (record.revision !== baseRevision) throw new SheetConflictError(record.revision);
@@ -159,6 +162,7 @@ export const fakeSheetApi: SheetApi = {
 
   async createCharacter({ name, payload }) {
     await fakeLatency(SAVE_LATENCY_MS);
+    if (fakeFails("fail-save")) throw offline();
     if (firstSaveFailure(name, false) === "offline") throw offline();
     const id = `fake-${Date.now().toString(36)}`;
     const store = await readStore();
@@ -180,6 +184,7 @@ export const fakeSheetApi: SheetApi = {
 
   async changeResource(id, key, change) {
     await fakeLatency(CHANGE_LATENCY_MS);
+    if (fakeFails("fail-play")) throw offline();
     const store = await readStore();
     const record = store[id] ?? seedRecord(id);
     const block = record.document?.blocks.find((b) => b.type === "resource" && b.resourceKeys.includes(key));

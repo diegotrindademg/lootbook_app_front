@@ -1,5 +1,6 @@
 import { authClient } from "@/features/auth/api/authClient";
-import { fakeLatency } from "@/shared/config/devFakes";
+import { LootbookApiError } from "@/shared/api/lootbookRequest";
+import { fakeFails, fakeLatency, fakeSwitch } from "@/shared/config/devFakes";
 import { FAKE_CHARACTERS } from "../data/fakeCharacters";
 import type { CharacterSummary } from "../types";
 import type { CharactersApi } from "./charactersApi";
@@ -38,8 +39,19 @@ async function writeList(list: CharacterSummary[]) {
   }
 }
 
-async function update(id: string, change: Partial<CharacterSummary>) {
+/** What the network layer throws when the back end cannot be reached. */
+function offline() {
+  return new LootbookApiError("Could not reach the Lootbook back end.", 0, null);
+}
+
+/** An action on a character pauses, and fails with `?fake=offline`. */
+async function act() {
   await fakeLatency(ACTION_LATENCY_MS);
+  if (fakeSwitch("offline")) throw offline();
+}
+
+async function update(id: string, change: Partial<CharacterSummary>) {
+  await act();
   const list = await readList();
   const next = list.map((c) =>
     c.id === id ? { ...c, ...change, updatedAt: new Date().toISOString() } : c,
@@ -56,17 +68,18 @@ export const fakeCharacterList = { read: readList, write: writeList };
 export const fakeCharactersApi: CharactersApi = {
   async list() {
     await fakeLatency(LIST_LATENCY_MS);
+    if (fakeFails("fail-list")) throw offline();
     return readList();
   },
   rename: (id, name) => update(id, { name }),
   archive: (id) => update(id, { status: "ARCHIVED" }),
   unarchive: (id) => update(id, { status: "ACTIVE" }),
   async remove(id) {
-    await fakeLatency(ACTION_LATENCY_MS);
+    await act();
     await writeList((await readList()).filter((c) => c.id !== id));
   },
   async duplicate(source) {
-    await fakeLatency(ACTION_LATENCY_MS);
+    await act();
     const copy: CharacterSummary = {
       ...source,
       id: `fake-copy-${Date.now().toString(36)}`,

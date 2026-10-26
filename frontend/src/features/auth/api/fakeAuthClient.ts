@@ -1,4 +1,4 @@
-import { fakeLatency } from "@/shared/config/devFakes";
+import { fakeFails, fakeLatency } from "@/shared/config/devFakes";
 import { AuthError, type AuthChangeListener, type AuthUser } from "../types";
 import type { AuthClient } from "./authClient";
 
@@ -57,9 +57,15 @@ function pendingResetEmail() {
   }
 }
 
+/** The fake sign-in service answers after a pause, or not at all with `?fake=fail-signin` or `offline`. */
+async function reachService() {
+  await fakeLatency(LATENCY_MS);
+  if (fakeFails("fail-signin")) throw new AuthError("network");
+}
+
 export const fakeAuthClient: AuthClient = {
   async signIn(email, password) {
-    await fakeLatency(LATENCY_MS);
+    await reachService();
     const lower = email.trim().toLowerCase();
     if (lower.startsWith("nobody")) throw new AuthError("no-account");
     if (password === "wrong") throw new AuthError("wrong-password");
@@ -68,20 +74,20 @@ export const fakeAuthClient: AuthClient = {
     return user;
   },
   async signUp(email) {
-    await fakeLatency(LATENCY_MS);
+    await reachService();
     if (email.trim().toLowerCase().startsWith("taken")) throw new AuthError("email-taken");
   },
   async resendConfirmation() {
-    await fakeLatency(LATENCY_MS);
+    await reachService();
   },
   async signInWithProvider(provider) {
-    await fakeLatency(LATENCY_MS);
+    await reachService();
     const user = { ...userFor(`lucien.${provider}@example.com`), displayName: "Lucien" };
     writeUser(user);
     return user;
   },
   async resetPassword(email) {
-    await fakeLatency(LATENCY_MS);
+    await reachService();
     try {
       // The reset link opens a fresh page, so the fake keeps the email where that page can read it.
       if (email.trim()) window.localStorage.setItem(RESET_KEY, email.trim());
@@ -93,7 +99,7 @@ export const fakeAuthClient: AuthClient = {
     return new URLSearchParams(window.location.search).get("expired") === "1" ? "expired" : "valid";
   },
   async setNewPassword() {
-    await fakeLatency(LATENCY_MS);
+    await reachService();
     const user = userFor(pendingResetEmail());
     writeUser(user);
     return user;

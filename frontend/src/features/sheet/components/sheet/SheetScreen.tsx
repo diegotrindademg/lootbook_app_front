@@ -176,6 +176,10 @@ export default function SheetScreen({ characterId, sample = false }: { character
     const titles = [...new Set(changes.map((c) => blocks.find((b) => b.id === c.blockId)?.title ?? ""))];
     setRefilled({ message: `${listTitles(titles)} refilled`, changes });
   };
+  // A refill that did not save has nothing to undo.
+  useEffect(() => {
+    if (play.failure) setRefilled(null);
+  }, [play.failure]);
   const onNewSession = sample || !sessionBlocks.length ? undefined : () => refill(sessionBlocks);
   const onResetResource = sample ? undefined : (block: ResourceBlock) => refill([block]);
   const pinned = blocks.some((block) => block.pinned);
@@ -212,7 +216,7 @@ export default function SheetScreen({ characterId, sample = false }: { character
   );
   const banner = (
     <>
-      {(restored || favoriteFailed || play.failed) && (
+      {(restored || favoriteFailed || play.failure) && (
         <div className={styles.banner}>
           {restored && (
             <InlineNotice tone="success" title="Draft restored" body="Signed in and saved. Nothing was lost." />
@@ -226,14 +230,15 @@ export default function SheetScreen({ characterId, sample = false }: { character
               onAction={() => setFavoriteFailed(false)}
             />
           )}
-          {play.failed && (
-            // WAITING ON DESIGN: no frame shows a tap at the table that did not save.
+          {play.failure && (
+            // WAITING ON DESIGN: 8. Contract 3 and v1.1, 5: back to the last saved value, Retry sends it again.
             <InlineNotice
               tone="error"
               title="That change did not save"
-              body="No connection. The sheet shows what was last saved."
-              actionLabel="Dismiss"
-              onAction={play.dismissFailure}
+              body={play.failure.message}
+              actionLabel="Retry"
+              onAction={play.failure.retry}
+              onDismiss={play.dismissFailure}
             />
           )}
         </div>

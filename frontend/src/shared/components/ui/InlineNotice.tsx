@@ -7,6 +7,8 @@ type InlineNoticeProps = {
   body?: React.ReactNode;
   actionLabel?: string;
   onAction?: () => void;
+  /** A close button after the action, for a notice that may stay put (a failed change with Retry). */
+  onDismiss?: () => void;
 };
 
 const TONE_ICON = { error: "alert", info: "eye", success: "check" } as const;
@@ -18,6 +20,7 @@ export default function InlineNotice({
   body,
   actionLabel,
   onAction,
+  onDismiss,
 }: InlineNoticeProps) {
   return (
     <div className={`${styles.notice} ${styles[tone]}`} role={tone === "error" ? "alert" : "status"}>
@@ -31,6 +34,11 @@ export default function InlineNotice({
       {actionLabel && (
         <button type="button" className={styles.action} onClick={onAction}>
           {actionLabel}
+        </button>
+      )}
+      {onDismiss && (
+        <button type="button" className={styles.dismiss} aria-label="Dismiss" onClick={onDismiss}>
+          <Icon name="close" size={16} />
         </button>
       )}
     </div>

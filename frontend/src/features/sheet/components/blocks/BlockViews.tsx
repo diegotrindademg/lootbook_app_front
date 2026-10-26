@@ -59,6 +59,12 @@ function StatSetView({ block }: { block: StatSetBlock }) {
                 <span className={styles.hidden}>, derived </span>
                 {derived}
               </span>
+            ) : entry.derived ? (
+              // Contract 3: a derived value that cannot be worked out shows "?", never a crash.
+              <span className={styles.derivedPill}>
+                <span aria-hidden="true">?</span>
+                <span className={styles.hidden}>, derived value cannot be worked out</span>
+              </span>
             ) : (
               <span className={styles.derivedSpacer} aria-hidden="true" />
             )}
