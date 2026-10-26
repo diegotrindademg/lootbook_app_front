@@ -40,7 +40,7 @@ export default function AuthScreen({
   const offlineBar = useOfflineBar();
 
   return (
-    <AppColumn size="page" className={styles.page}>
+    <AppColumn size="page" className={offlineBar ? `${styles.page} ${styles.offline}` : styles.page}>
       {/* Page 8, O5: no nav bar here, so the offline bar sits at the top and the screen moves down. */}
       <OfflineBanner state={offlineBar} className={offlineBar ? styles.offlineBar : undefined} />
       {/* Wide (Figma page 2 wide frames): the logo top left, the screen as a centred 375 card. */}
