@@ -5,6 +5,7 @@ import PillButton from "@/shared/components/ui/PillButton";
 import { BLOCK_TYPE_LABEL } from "../../data/blockPresets";
 import { BLOCK_ICON_KEYS, type BlockDensity, type SheetBlock } from "../../types";
 import { iconName } from "../../utils/blocks";
+import { configProblem } from "../../utils/fillMethods";
 import { SectionLabel } from "../controls/Field";
 import Segmented from "../controls/Segmented";
 import ChoiceConfig from "./ChoiceConfig";
@@ -34,6 +35,7 @@ export default function BlockConfigSheet({ block, onChange, onRemove, onDone, si
   );
   const set = (patch: Partial<SheetBlock>) => onChange({ ...block, ...patch } as SheetBlock);
   const titleMissing = !block.title.trim();
+  const problem = configProblem(block);
 
   return (
     <div className={styles.config}>
@@ -108,7 +110,9 @@ export default function BlockConfigSheet({ block, onChange, onRemove, onDone, si
           Remove block
         </button>
         <div className={styles.done}>
-          <PillButton onClick={onDone}>Done</PillButton>
+          <PillButton onClick={onDone} disabled={Boolean(problem)}>
+            Done
+          </PillButton>
         </div>
       </div>
     </div>

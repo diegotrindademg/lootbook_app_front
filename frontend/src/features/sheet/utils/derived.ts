@@ -30,5 +30,29 @@ export function formatDerived(value: number | null, signed: boolean) {
   return signed && value > 0 ? `+${text}` : text;
 }
 
+const ROUNDING_WORDS: Record<Rounding, string> = {
+  floor: "rounded down",
+  ceil: "rounded up",
+  round: "rounded to nearest",
+  none: "",
+};
+
+function trimNumber(n: number) {
+  return String(Math.round(n * 10000) / 10000);
+}
+
+/** Figma page 5, T13: "On Might: half, minus 5, rounded down". */
+export function describeFormula(entryName: string, formula: Pick<DerivedEntry, "multiplier" | "offset" | "rounding">) {
+  const parts: string[] = [];
+  const m = formula.multiplier;
+  if (m === 0.5) parts.push("half");
+  else if (m === 2) parts.push("double");
+  else if (m !== 1) parts.push(`times ${trimNumber(m)}`);
+  if (formula.offset > 0) parts.push(`plus ${trimNumber(formula.offset)}`);
+  if (formula.offset < 0) parts.push(`minus ${trimNumber(-formula.offset)}`);
+  if (ROUNDING_WORDS[formula.rounding]) parts.push(ROUNDING_WORDS[formula.rounding]);
+  return `On ${entryName || "a value"}: ${parts.length ? parts.join(", ") : "the same number"}`;
+}
+
 /** The usual "half the score, minus five, rounded down" modifier a new derived value starts from. */
 export const DEFAULT_DERIVED_FORMULA = { multiplier: 0.5, offset: -5, rounding: "floor" as Rounding };

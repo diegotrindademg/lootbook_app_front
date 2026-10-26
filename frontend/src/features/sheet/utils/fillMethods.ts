@@ -1,4 +1,4 @@
-import type { StatEntry } from "../types";
+import type { SheetBlock, StatEntry, StatSetBlock } from "../types";
 
 /**
  * How the four fill methods work, plain versions until "5 - Blocks" draws them. Nothing here is
@@ -45,8 +45,47 @@ export function parseRoll(formula: string) {
   return { count, sides, keep, bonus };
 }
 
-export function rollOnce(roll: NonNullable<ReturnType<typeof parseRoll>>, random = Math.random) {
+export type Roll = NonNullable<ReturnType<typeof parseRoll>>;
+
+/** One roll: the total, the dice kept (highest first) and the dice dropped. */
+export function rollOnce(roll: Roll, random = Math.random) {
   const dice = Array.from({ length: roll.count }, () => 1 + Math.floor(random() * roll.sides));
   dice.sort((a, b) => b - a);
-  return dice.slice(0, roll.keep).reduce((sum, die) => sum + die, 0) + roll.bonus;
+  const kept = dice.slice(0, roll.keep);
+  return { total: kept.reduce((sum, die) => sum + die, 0) + roll.bonus, kept, dropped: dice.slice(roll.keep) };
+}
+
+/** Figma page 5, T10: "Roll 4 six-sided dice, keep the best 3". */
+export function describeRoll(roll: Roll) {
+  const dice = `${roll.count} ${roll.sides}-sided ${roll.count === 1 ? "die" : "dice"}`;
+  const keep = roll.keep < roll.count ? `, keep the best ${roll.keep}` : "";
+  const bonus = roll.bonus ? `, ${roll.bonus > 0 ? "add" : "take away"} ${Math.abs(roll.bonus)}` : "";
+  return `Roll ${dice}${keep}${bonus}`;
+}
+
+/** Figma page 5, T10: "Rolled 6, 5, 3, dropped 1". */
+export function describeRolled(kept: number[], dropped: number[]) {
+  return `Rolled ${kept.join(", ")}${dropped.length ? `, dropped ${dropped.join(", ")}` : ""}`;
+}
+
+/** A pool's Total, Lowest and Highest, from its settings or the defaults. */
+export function poolSettings(block: StatSetBlock) {
+  const config = block.fillConfig ?? {};
+  return {
+    total: typeof config.total === "number" ? config.total : DEFAULT_POOL.total,
+    min: typeof config.min === "number" ? config.min : DEFAULT_POOL.min,
+    max: typeof config.max === "number" ? config.max : DEFAULT_POOL.max,
+  };
+}
+
+/**
+ * Why Done is off in a block's configuration, or null. Figma page 5, T6: a point pool spent past its
+ * total, or a value outside Lowest and Highest, blocks Done.
+ */
+export function configProblem(block: SheetBlock) {
+  if (block.type !== "stats" || block.fill !== "pool") return null;
+  const { total, min, max } = poolSettings(block);
+  if (poolSpent(block.entries, min) > total) return "Lower a value to save this block";
+  if (block.entries.some((e) => e.value !== null && (e.value < min || e.value > max))) return "A value is outside the pool";
+  return null;
 }

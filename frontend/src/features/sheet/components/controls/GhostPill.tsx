@@ -10,6 +10,8 @@ type GhostPillProps = {
   busy?: boolean;
   /** Looks disabled but stays focusable, so the reason it is off (aria-describedby) can be read. */
   inactive?: boolean;
+  /** Full width, as page 5's "+ Add value" and "Roll all values". */
+  wide?: boolean;
   onClick?: () => void;
   ariaLabel?: string;
   ariaDescribedBy?: string;
@@ -22,11 +24,12 @@ export default function GhostPill({
   disabled = false,
   busy = false,
   inactive = false,
+  wide = false,
   onClick,
   ariaLabel,
   ariaDescribedBy,
 }: GhostPillProps) {
-  const className = [styles.pill, tone === "teal" ? styles.teal : styles.white, busy && styles.busy, inactive && styles.inactive]
+  const className = [styles.pill, tone === "teal" ? styles.teal : styles.white, busy && styles.busy, inactive && styles.inactive, wide && styles.wide]
     .filter(Boolean)
     .join(" ");
   return (
