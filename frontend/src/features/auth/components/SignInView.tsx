@@ -37,7 +37,7 @@ export default function SignInView() {
       } else if (isAuthError(caught, "no-account")) {
         setError(authNotices.noAccount(Boolean(draft), () => router.push("/create-account")));
       } else {
-        setError(authNotices.failed(caught, { onRetry: submit, doing: "sign-in" }));
+        setError(authNotices.failed(caught, { onRetry: submit, doing: "sign-in", hasDraft: Boolean(draft) }));
       }
     }
   };

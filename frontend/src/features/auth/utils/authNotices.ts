@@ -57,15 +57,22 @@ export const authNotices = {
    * A call to the sign-in service that failed. Offline (page 8, O9 and O10): "You are offline" with
    * Retry; the buttons stay on and the fields keep what was typed.
    */
-  failed: (error: unknown, options: { onRetry?: () => void; doing?: "sign-in" | "create-account" } = {}): AuthNotice => {
+  failed: (
+    error: unknown,
+    options: { onRetry?: () => void; doing?: "sign-in" | "create-account"; hasDraft?: boolean } = {},
+  ): AuthNotice => {
     if (error instanceof AuthError && error.code === "not-connected") {
       return { title: "Sign-in is not connected yet", body: "This build has no sign-in service behind it." };
     }
     const retry = options.onRetry ? { actionLabel: "Retry", onAction: options.onRetry } : {};
     if (!isOnline()) {
+      // The draft line only where there is one: O9 draws it in "Save your character" (review F3).
+      const signIn = options.hasDraft
+        ? "Signing in needs a connection. Your draft stays on this device."
+        : "Signing in needs a connection. Nothing you typed is lost.";
       const body =
         options.doing === "sign-in"
-          ? "Signing in needs a connection. Your draft stays on this device."
+          ? signIn
           : options.doing === "create-account"
             ? "Creating an account needs a connection. Nothing you typed is lost."
             : "This needs a connection. Nothing you typed is lost.";
