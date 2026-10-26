@@ -142,7 +142,7 @@ function ResourceView({
       )}
       {block.model === "pips" && tier && (
         <>
-          {/* WAITING ON DESIGN: 6. Each pip a 44 pitch so each is a 44 target (L-26, Oct 26; drawn 26). */}
+          {/* WAITING ON DESIGN: 6. Each pip a 44 pitch so each is a 44 target (the lead, Oct 26 2026; drawn 26). */}
           <Pips
             label={block.title}
             current={tier.current}

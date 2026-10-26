@@ -181,7 +181,7 @@ export default function CharacterScreen() {
       revealKey,
     );
   } else if (list.characters.length === 0 && tab === "Recent" && query.trim() && matchesSearch(SAMPLE_CHARACTER, query)) {
-    // With no characters (signed out, or none yet), search covers the sample card too (L-26, Oct 26).
+    // With no characters (signed out, or none yet), search covers the sample card too (the lead, Oct 26 2026).
     well = showSlides([sampleSlide]);
   } else if (quietLabel) {
     // Favorites or Archived with nothing in them, or a search with no match (01.5).

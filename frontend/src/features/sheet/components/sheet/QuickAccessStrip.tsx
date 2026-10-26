@@ -124,7 +124,7 @@ function Tile({ block, onSetResource }: { block: SheetBlock; onSetResource?: Set
   if (block.type === "resource" && block.model === "pips") {
     const tier = block.tiers[0];
     // WAITING ON DESIGN: 6. The strip keeps its compact pips as a picture; minus and plus (44 targets) change
-    // the value, so no target is smaller than 44 (L-26, Oct 26).
+    // the value, so no target is smaller than 44 (the lead, Oct 26 2026).
     body = tier && (
       <span className={styles.counter}>
         <Pips label={block.title} current={tier.current} max={tier.max} size={12} gap={5} />
