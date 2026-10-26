@@ -1,4 +1,5 @@
 import GoblinSymbol from "@/assets/goblinsymbol.svg";
+import LootbookLogo from "@/assets/lootbook-logo-horizontal.svg";
 import AppColumn from "@/shared/components/layout/AppColumn";
 import Icon from "@/shared/components/ui/Icon";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
@@ -37,43 +38,47 @@ export default function AuthScreen({
   const compact = Boolean(error);
 
   return (
-    <AppColumn>
-      <button type="button" className={styles.back} aria-label={backLabel} onClick={onBack}>
-        <Icon name="chevronLeft" size={22} />
-      </button>
-      <main className={compact ? `${styles.well} ${styles.compact}` : styles.well}>
-        {!compact && (
-          <div className={styles.badgeRow} aria-hidden="true">
-            {badge === "goblin" ? (
-              // The SVG loader drops the viewBox, so it is given back here to let the mark scale.
-              <GoblinSymbol className={styles.goblin} viewBox="0 0 48 42" />
-            ) : (
-              <span className={styles.circle}>
-                <Icon name={badge} size={30} />
-              </span>
+    <AppColumn size="page" className={styles.page}>
+      {/* Wide (Figma page 2 wide frames): the logo top left, the screen as a centred 375 card. */}
+      <LootbookLogo className={styles.logo} role="img" aria-label="Lootbook" />
+      <div className={styles.card}>
+        <button type="button" className={styles.back} aria-label={backLabel} onClick={onBack}>
+          <Icon name="chevronLeft" size={22} />
+        </button>
+        <main className={compact ? `${styles.well} ${styles.compact}` : styles.well}>
+          {!compact && (
+            <div className={styles.badgeRow} aria-hidden="true">
+              {badge === "goblin" ? (
+                // The SVG loader drops the viewBox, so it is given back here to let the mark scale.
+                <GoblinSymbol className={styles.goblin} viewBox="0 0 48 42" />
+              ) : (
+                <span className={styles.circle}>
+                  <Icon name={badge} size={30} />
+                </span>
+              )}
+            </div>
+          )}
+          <div className={styles.copy}>
+            <h1 className={styles.title}>{title}</h1>
+            {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+            {reassurance && !compact && (
+              <p className={styles.chip}>
+                <Icon name="check" size={14} />
+                {reassurance}
+              </p>
             )}
           </div>
-        )}
-        <div className={styles.copy}>
-          <h1 className={styles.title}>{title}</h1>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-          {reassurance && !compact && (
-            <p className={styles.chip}>
-              <Icon name="check" size={14} />
-              {reassurance}
-            </p>
+          {error && (
+            <InlineNotice
+              title={error.title}
+              body={error.body}
+              actionLabel={error.actionLabel}
+              onAction={error.onAction}
+            />
           )}
-        </div>
-        {error && (
-          <InlineNotice
-            title={error.title}
-            body={error.body}
-            actionLabel={error.actionLabel}
-            onAction={error.onAction}
-          />
-        )}
-        <div className={styles.body}>{children}</div>
-      </main>
+          <div className={styles.body}>{children}</div>
+        </main>
+      </div>
     </AppColumn>
   );
 }

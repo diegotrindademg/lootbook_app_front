@@ -181,3 +181,55 @@
   flex-direction: column;
   gap: 14px;
 }
+
+.card {
+  position: relative;
+}
+
+.logo {
+  display: none;
+}
+
+/*
+ * Wide (Figma "A1 · Sign in, with a draft · wide" 2373:2340 and its siblings): the logo at 88, 31 and
+ * the screen as a 375 card in the middle of the page, its Back button inside at 24, 24.
+ */
+@media (min-width: 1024px) {
+  .page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 104px 0 64px;
+  }
+
+  .logo {
+    position: absolute;
+    top: 31px;
+    left: 88px;
+    display: block;
+    width: 152px;
+    height: 42px;
+  }
+
+  .card {
+    width: 375px;
+    border: var(--border-width-hairline) solid var(--color-border-glass);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-page-top);
+    box-shadow: 0 30px 80px color-mix(in srgb, black 35%, transparent);
+  }
+
+  .back {
+    top: 24px;
+  }
+
+  .well,
+  .compact {
+    min-height: 0;
+    padding: 73px 29px 37px;
+  }
+
+  .compact {
+    padding-top: 84px;
+  }
+}
