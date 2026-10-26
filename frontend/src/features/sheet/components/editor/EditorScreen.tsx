@@ -202,7 +202,7 @@ export default function EditorScreen({ characterId }: { characterId: string | nu
   const busy = saving || phase !== "ready";
 
   return (
-    <AppColumn className={styles.column}>
+    <AppColumn size="page" className={styles.column}>
       <div className={styles.screen} inert={overlayOpen || undefined}>
         <header className={styles.top}>
           <button type="button" className={styles.cancel} onClick={cancel} disabled={saving}>

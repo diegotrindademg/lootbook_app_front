@@ -177,3 +177,53 @@
   line-height: 19px;
   color: var(--color-feedback-error);
 }
+
+.close {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    padding: 24px 24px 0;
+  }
+
+  .body {
+    padding: 18px 24px 12px;
+  }
+
+  .footer {
+    padding: 10px 20px 20px;
+  }
+
+  .close {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-content-primary) 8%, transparent);
+    color: var(--color-content-primary);
+    cursor: pointer;
+  }
+
+  .close::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+  }
+
+  .close:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .close:focus-visible {
+    outline: 2px solid var(--color-accent-default);
+    outline-offset: 2px;
+  }
+}

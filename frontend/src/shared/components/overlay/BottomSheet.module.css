@@ -21,6 +21,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: var(--sheet-height);
   border-top-left-radius: var(--radius-md);
   border-top-right-radius: var(--radius-md);
   background: var(--color-surface-page-bottom);
@@ -72,5 +73,38 @@
   .sheet,
   .scrim {
     animation-duration: 1ms;
+  }
+}
+
+@keyframes panelIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Wide: a 480 panel on the right, full height, its left corners rounded; no grabber or teal rule. */
+@media (min-width: 1024px) {
+  .overlay {
+    inset: 0;
+    justify-content: flex-end;
+    align-items: stretch;
+    width: 100%;
+    transform: none;
+  }
+
+  .sheet {
+    width: 480px;
+    height: 100%;
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    box-shadow: -20px 0 40px color-mix(in srgb, black 35%, transparent);
+    animation-name: panelIn;
+  }
+
+  .rule,
+  .grabber {
+    display: none;
   }
 }

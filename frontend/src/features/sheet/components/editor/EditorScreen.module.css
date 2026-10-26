@@ -186,3 +186,46 @@
   outline: 2px solid var(--color-accent-default);
   outline-offset: 2px;
 }
+
+/*
+ * Wide (Figma page 3 wide frames, "Editing Brakka · wide" 2414:31346): the page, with the header, the
+ * name, the rows and Add block in a centred 640 column; the hint right-aligned under the name.
+ */
+@media (min-width: 1024px) {
+  .screen {
+    padding: 0 calc((100% - 640px) / 2);
+  }
+
+  .top {
+    margin: 40px 0 0;
+  }
+
+  .saveHint {
+    top: 142px;
+    right: calc((100% - 640px) / 2);
+    left: calc((100% - 640px) / 2);
+  }
+
+  .name {
+    width: 100%;
+    margin: 18px 0 0;
+  }
+
+  .body {
+    margin-top: 31px;
+    padding: 4px 0 24px;
+  }
+
+  .stack {
+    right: calc((100% - 640px) / 2);
+    bottom: 88px;
+    left: calc((100% - 640px) / 2);
+  }
+
+  .footer {
+    align-items: flex-end;
+    height: 120px;
+    margin-top: -48px;
+    padding: 0 0 24px;
+  }
+}

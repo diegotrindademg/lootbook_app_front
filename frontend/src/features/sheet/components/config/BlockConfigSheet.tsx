@@ -1,6 +1,7 @@
 "use client";
 
 import BlockIcon, { BlockIconBox } from "@/shared/components/ui/BlockIcon";
+import Icon from "@/shared/components/ui/Icon";
 import PillButton from "@/shared/components/ui/PillButton";
 import { BLOCK_TYPE_LABEL } from "../../data/blockPresets";
 import { BLOCK_ICON_KEYS, type BlockDensity, type SheetBlock } from "../../types";
@@ -52,6 +53,10 @@ export default function BlockConfigSheet({ block, onChange, onRemove, onDone, si
           onChange={(event) => set({ title: event.target.value })}
         />
         <span className={styles.type}>{BLOCK_TYPE_LABEL[block.type]}</span>
+        {/* Wide only (Figma BW1 A): the panel closes from its corner as well as from Done. */}
+        <button type="button" className={styles.close} aria-label="Close" onClick={onDone} disabled={Boolean(problem)}>
+          <Icon name="close" size={16} />
+        </button>
       </div>
       {titleMissing && (
         <p id="config-title-error" className={styles.titleErrorText} role="alert">

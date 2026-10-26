@@ -17,10 +17,11 @@ type BottomSheetProps = {
 
 /**
  * A tall bottom sheet over a scrim (the design's `SheetOverlay` with the library and block
- * configuration chrome: the teal rule on the top edge and the grabber). Focus moves inside, Tab
- * stays inside, Escape and the scrim close it, focus goes back to whatever opened it.
- * Rendered at the end of the page so a second sheet opened from inside the first stacks above it
- * and is not held inside the first sheet's moving box.
+ * configuration chrome: the teal rule on the top edge and the grabber). At wide it is a 480 panel on
+ * the right, full height, over the dimmed page (Figma BW1 A, the library panel on page 3).
+ * Focus moves inside, Tab stays inside, Escape and the scrim close it, focus goes back to whatever
+ * opened it. Rendered at the end of the page so a second sheet opened from inside the first stacks
+ * above it and is not held inside the first sheet's moving box.
  */
 export default function BottomSheet({ label, onClose, children, height = 660, second = false }: BottomSheetProps) {
   const ref = useOverlayFocus<HTMLDivElement>(onClose);
@@ -30,7 +31,7 @@ export default function BottomSheet({ label, onClose, children, height = 660, se
       <div
         ref={ref}
         className={styles.sheet}
-        style={{ height: `min(${height}px, calc(100dvh - 24px))` }}
+        style={{ "--sheet-height": `min(${height}px, calc(100dvh - 24px))` } as React.CSSProperties}
         role="dialog"
         aria-modal="true"
         aria-label={label}

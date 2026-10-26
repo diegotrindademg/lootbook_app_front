@@ -174,3 +174,17 @@
   text-align: center;
   color: var(--color-content-subtle);
 }
+
+@media (min-width: 1024px) {
+  .header {
+    padding: 32px 24px 0;
+  }
+
+  .search {
+    margin: 21px 24px 0;
+  }
+
+  .body {
+    padding: 16px 24px 24px;
+  }
+}
