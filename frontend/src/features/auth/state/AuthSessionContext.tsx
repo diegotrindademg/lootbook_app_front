@@ -22,11 +22,16 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     let active = true;
-    authClient.currentUser().then((current) => {
-      if (!active) return;
-      setUser(current);
-      setChecked(true);
-    });
+    // A sign-in service that cannot be reached reads as signed out, so the nav bar offers Sign in
+    // instead of waiting forever.
+    authClient
+      .currentUser()
+      .catch(() => null)
+      .then((current) => {
+        if (!active) return;
+        setUser(current);
+        setChecked(true);
+      });
     const unsubscribe = authClient.onChange((next) => {
       setUser(next);
       setChecked(true);

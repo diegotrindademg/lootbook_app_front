@@ -48,6 +48,45 @@ describe("deferredAuthClient", () => {
     await expect(deferredAuthClient(async () => client).signIn("a", "b")).rejects.toThrow("wrong");
   });
 
+  it("does not keep a failed load: that call fails as network, the next one loads again", async () => {
+    const { client } = realClient();
+    const load = vi.fn<() => Promise<AuthClient>>();
+    load.mockRejectedValueOnce(new Error("Loading chunk 352 failed")).mockResolvedValueOnce(client);
+    const deferred = deferredAuthClient(load);
+    await expect(deferred.signIn("a@b.c", "pw")).rejects.toMatchObject({ name: "AuthError", code: "network" });
+    await expect(deferred.signIn("a@b.c", "pw")).resolves.toMatchObject({ id: "u1" });
+    expect(load).toHaveBeenCalledTimes(2);
+    await deferred.signOut();
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+
+  it("answers no user and no token while the load fails, so the screens leave checking", async () => {
+    const load = vi.fn(async (): Promise<AuthClient> => {
+      throw new Error("offline");
+    });
+    const deferred = deferredAuthClient(load);
+    await expect(deferred.currentUser()).resolves.toBeNull();
+    await expect(deferred.getAccessToken()).resolves.toBeNull();
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps a listener through a failed load and attaches it when a later load works", async () => {
+    const { client } = realClient();
+    const load = vi.fn<() => Promise<AuthClient>>();
+    load.mockRejectedValueOnce(new Error("offline")).mockResolvedValueOnce(client);
+    const deferred = deferredAuthClient(load);
+    const listener = vi.fn();
+    deferred.onChange(listener);
+    await expect(deferred.currentUser()).resolves.toBeNull();
+    expect(client.onChange).not.toHaveBeenCalled();
+    await deferred.signIn("a@b.c", "pw");
+    expect(client.onChange).toHaveBeenCalledOnce();
+    expect(client.onChange).toHaveBeenCalledWith(listener);
+    const later = vi.fn();
+    deferred.onChange(later);
+    expect(client.onChange).toHaveBeenCalledWith(later);
+  });
+
   it("attaches a listener once loaded, and not at all when removed first", async () => {
     const { client, unsubscribe } = realClient();
     const listener = vi.fn();
