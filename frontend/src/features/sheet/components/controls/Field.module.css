@@ -31,11 +31,19 @@
   text-align: center;
 }
 
+/*
+ * Inside a sheet's scrolling body (a flex column) a field must not shrink: on a phone it was squeezed to one
+ * clipped line (review F1). It keeps its rows and grows with its text where the browser can size it.
+ */
 .area {
+  flex-shrink: 0;
   height: auto;
   padding: 12px 16px;
   border-radius: var(--radius-sm);
   line-height: 21px;
+  field-sizing: content;
+  min-height: calc(var(--area-rows, 3) * 21px + 24px);
+  resize: vertical;
 }
 
 /* Design: Open Sans 700/10, .16em, uppercase. Lifted to 14px (M0, X3). */

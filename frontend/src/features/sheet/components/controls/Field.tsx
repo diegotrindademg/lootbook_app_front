@@ -18,9 +18,14 @@ export function Field({ label, size = "md", align = "start", className, ...input
 type TextAreaFieldProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string };
 
 /** The multi-line field, radius 16. */
-export function TextAreaField({ label, className, ...textarea }: TextAreaFieldProps) {
+export function TextAreaField({ label, className, style, ...textarea }: TextAreaFieldProps) {
   return (
-    <textarea aria-label={label} {...textarea} className={[styles.field, styles.area, className].filter(Boolean).join(" ")} />
+    <textarea
+      aria-label={label}
+      {...textarea}
+      style={{ ...style, ["--area-rows" as string]: textarea.rows ?? 3 }}
+      className={[styles.field, styles.area, className].filter(Boolean).join(" ")}
+    />
   );
 }
 
