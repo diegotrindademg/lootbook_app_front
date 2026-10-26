@@ -124,3 +124,12 @@
   outline: 2px solid var(--color-accent-default);
   outline-offset: 2px;
 }
+
+/* Wide: the scrim covers the page; the dialog stays 311 wide in the middle (Figma wide frames). */
+@media (min-width: 1024px) {
+  .overlay {
+    inset: 0;
+    width: 100%;
+    transform: none;
+  }
+}

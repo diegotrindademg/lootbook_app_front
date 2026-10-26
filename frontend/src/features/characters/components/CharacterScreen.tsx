@@ -10,6 +10,7 @@ import NavBar from "@/shared/components/layout/NavBar";
 import TabBar from "@/shared/components/layout/TabBar";
 import InlineNotice from "@/shared/components/ui/InlineNotice";
 import UndoToast from "@/shared/components/ui/UndoToast";
+import { useWide } from "@/shared/hooks/useWide";
 import { useCharacterList } from "../hooks/useCharacterList";
 import { useLaunchSplash } from "../hooks/useLaunchSplash";
 import { SAMPLE_SHEET_PATH } from "@/features/sheet/data/sampleSheet";
@@ -52,6 +53,7 @@ export default function CharacterScreen() {
   const session = useAuthSession();
   const signedIn = session.status === "checking" ? null : session.status === "signed-in";
   const list = useCharacterList(signedIn);
+  const wide = useWide();
 
   const [tab, setTab] = useState<CharacterListTab>("Recent");
   const [query, setQuery] = useState("");
@@ -60,6 +62,7 @@ export default function CharacterScreen() {
 
   const router = useRouter();
   const [menuFor, setMenuFor] = useState<CharacterSummary | null>(null);
+  const [menuAnchor, setMenuAnchor] = useState<DOMRect | null>(null);
   const [dialog, setDialog] = useState<{ kind: "rename" | "delete"; character: CharacterSummary } | null>(
     null,
   );
@@ -118,9 +121,31 @@ export default function CharacterScreen() {
   const overlayOpen = Boolean(menuFor || dialog);
   const quietLabel = emptyLabel(tab, query);
 
+  // Phone: the carousel. Wide (Figma page 1 wide frames): the same cards in a grid, 292 wide, 32 apart.
+  const showSlides = (slides: CarouselSlide[], revealCard?: string | null) =>
+    wide ? (
+      <ul className={styles.grid}>
+        {slides.map((slide) => (
+          <li key={slide.key}>{slide.render(true)}</li>
+        ))}
+      </ul>
+    ) : (
+      <CharacterCarousel key={tab} revealKey={revealCard} slides={slides} />
+    );
+
   let well: React.ReactNode;
   if (list.status === "loading") {
-    well = <CarouselSkeleton />;
+    well = wide ? (
+      <ul className={styles.grid} aria-hidden="true">
+        {[0, 1, 2, 3].map((n) => (
+          <li key={n}>
+            <CarouselSkeleton />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <CarouselSkeleton />
+    );
   } else if (list.status === "error") {
     well = (
       <div className={styles.wellNotice}>
@@ -134,38 +159,38 @@ export default function CharacterScreen() {
     );
   } else if (visible.length > 0) {
     // S5: the list for this tab.
-    well = (
-      <CharacterCarousel
-        key={tab}
-        revealKey={revealKey}
-        slides={visible.map((character) => ({
-          key: character.id,
-          render: (active) => (
-            <CharacterCard
-              name={character.name}
-              subtitle={character.subtitle}
-              imageUrl={character.imageUrl}
-              active={active}
-              href={`/characters/${character.id}`}
-              onMenu={() => setMenuFor(character)}
-            />
-          ),
-        }))}
-      />
+    well = showSlides(
+      visible.map((character) => ({
+        key: character.id,
+        render: (active: boolean) => (
+          <CharacterCard
+            name={character.name}
+            subtitle={character.subtitle}
+            imageUrl={character.imageUrl}
+            active={active}
+            href={`/characters/${character.id}`}
+            onMenu={(event) => {
+              setMenuAnchor(event.currentTarget.getBoundingClientRect());
+              setMenuFor(character);
+            }}
+          />
+        ),
+      })),
+      revealKey,
     );
   } else if (quietLabel) {
     // Favorites or Archived with nothing in them, or a search with no match (01.5).
     well = <EmptyCharacterCard label={quietLabel} />;
   } else if (list.characters.length === 0) {
     // S3 signed out and S4 signed in: create a character, or look at the sample.
-    well = <CharacterCarousel slides={[createSlide, sampleSlide]} />;
+    well = showSlides([createSlide, sampleSlide]);
   } else {
     // Every character is archived: Recent only invites a new one.
-    well = <CharacterCarousel slides={[createSlide]} />;
+    well = showSlides([createSlide]);
   }
 
   return (
-    <AppColumn>
+    <AppColumn size="page">
       <main className={styles.screen} inert={overlayOpen || undefined}>
         <NavBar
           signedIn={signedIn}
@@ -174,13 +199,15 @@ export default function CharacterScreen() {
           signInHref="/sign-in?returnTo=%2F"
           profileHref="/settings"
         />
-        <CharacterSearchField
-          value={query}
-          onChange={setQuery}
-          onFocusChange={setSearchFocused}
-          inputRef={searchRef}
-        />
-        <ListTabs active={tab} onChange={setTab} controls={WELL_ID} />
+        <div className={styles.controls}>
+          <CharacterSearchField
+            value={query}
+            onChange={setQuery}
+            onFocusChange={setSearchFocused}
+            inputRef={searchRef}
+          />
+          <ListTabs active={tab} onChange={setTab} controls={WELL_ID} />
+        </div>
         <section
           id={WELL_ID}
           className={styles.well}
@@ -195,7 +222,8 @@ export default function CharacterScreen() {
         activeId="characters"
         createHref="/characters/create"
         onSearch={() => searchRef.current?.focus()}
-        hidden={searchFocused || overlayOpen}
+        // Phone: out of the way while typing or while a sheet is up. Wide: always at the top (Figma).
+        hidden={!wide && (searchFocused || overlayOpen)}
       />
 
       {undoFor && !overlayOpen && (
@@ -225,7 +253,12 @@ export default function CharacterScreen() {
       )}
 
       {menuFor && (
-        <ActionSheet title={menuFor.name} actions={menuActions(menuFor)} onClose={() => setMenuFor(null)} />
+        <ActionSheet
+          title={menuFor.name}
+          actions={menuActions(menuFor)}
+          anchor={menuAnchor}
+          onClose={() => setMenuFor(null)}
+        />
       )}
 
       {dialog?.kind === "rename" && (

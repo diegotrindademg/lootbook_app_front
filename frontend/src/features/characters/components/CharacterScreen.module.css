@@ -41,3 +41,49 @@
   width: calc(min(100vw, var(--app-column-width)) - 40px);
   transform: translateX(-50%);
 }
+
+/*
+ * Wide (Figma "S5 · List · wide" 2363:4041): nav bar on top with the tab bar in its middle, list
+ * tabs left and search right (360) on the second row, then the cards in a grid from x 88.
+ */
+@media (min-width: 1024px) {
+  .screen {
+    padding-bottom: 64px;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 18px 88px 0;
+  }
+
+  .well {
+    display: block;
+    height: auto;
+    margin-top: 34px;
+    padding: 0 88px;
+  }
+
+  .wellNotice {
+    max-width: 480px;
+    padding: 0;
+  }
+
+  .toast,
+  .failure {
+    bottom: 40px;
+    width: 335px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 292px);
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

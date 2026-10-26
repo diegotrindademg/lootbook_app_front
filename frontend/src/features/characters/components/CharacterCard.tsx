@@ -12,7 +12,7 @@ type CharacterCardProps = {
   /** Where a tap goes. Without it the card does not open (the sample card). */
   href?: string;
   /** Opens the card menu. */
-  onMenu?: () => void;
+  onMenu?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /** A small label in the top left corner, for the sample card. */
   badge?: string;
 };

@@ -47,3 +47,9 @@
   outline: 2px solid var(--color-accent-default);
   outline-offset: 2px;
 }
+
+@media (min-width: 1024px) {
+  .tabs {
+    margin: 0;
+  }
+}

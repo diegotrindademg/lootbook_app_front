@@ -124,3 +124,40 @@
     animation-duration: 1ms;
   }
 }
+
+/* Wide: the card menu as a popover beside its button (Figma "Menu popover", 260 wide). */
+.popoverLayer {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+}
+
+.clickAway {
+  position: absolute;
+  inset: 0;
+}
+
+.popover {
+  position: fixed;
+  width: 260px;
+  padding: 10px;
+  border: var(--border-width-hairline) solid var(--color-border-glass);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  box-shadow: 0 20px 48px color-mix(in srgb, black 45%, transparent);
+  animation: scrimIn 160ms ease;
+}
+
+.popover .actions {
+  gap: 0;
+}
+
+.popover .action {
+  height: 48px;
+  border: none;
+  background: none;
+}
+
+.popover .action:hover {
+  background: color-mix(in srgb, var(--color-content-primary) 6%, transparent);
+}

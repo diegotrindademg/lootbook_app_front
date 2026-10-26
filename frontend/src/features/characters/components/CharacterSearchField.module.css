@@ -40,3 +40,11 @@
 .input::-webkit-search-cancel-button {
   display: none;
 }
+
+@media (min-width: 1024px) {
+  .field {
+    flex-shrink: 0;
+    width: 360px;
+    margin: 0;
+  }
+}

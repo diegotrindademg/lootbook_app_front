@@ -1,8 +1,14 @@
-/* WAITING ON THE WIDE DESIGN: a centred phone-width column at every width for now. */
+/* A centred phone-width column; screens that have a wide layout open to the page from 1024px. */
 .column {
   position: relative;
   width: 100%;
   max-width: var(--app-column-width);
   min-height: 100dvh;
   margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    max-width: 1440px;
+  }
 }

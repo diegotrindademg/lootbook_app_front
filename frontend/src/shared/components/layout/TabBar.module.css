@@ -92,3 +92,16 @@
   outline: 2px solid var(--color-accent-default);
   outline-offset: 2px;
 }
+
+/* Wide (Figma page 1 wide frames): the same bar at the top centre of the page, 20 from the top. */
+@media (min-width: 1024px) {
+  .tabBar {
+    top: 20px;
+    bottom: auto;
+    width: 343px;
+  }
+
+  .hidden {
+    transform: translate(-50%, -16px);
+  }
+}

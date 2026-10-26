@@ -95,3 +95,12 @@
   outline: 2px solid var(--color-accent-default);
   outline-offset: 2px;
 }
+
+/* Wide: the logo at 88, 31 and the profile ending 88 from the right, the tab bar between them. */
+@media (min-width: 1024px) {
+  .navBar {
+    align-items: center;
+    height: 104px;
+    padding: 0 88px;
+  }
+}

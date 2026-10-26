@@ -3,13 +3,18 @@ import styles from "./AppColumn.module.css";
 type AppColumnProps = {
   children: React.ReactNode;
   className?: string;
+  /**
+   * "phone" keeps the phone-width column at every width; "page" opens to the wide layout from 1024px
+   * (Figma's wide frames, slice 3), up to 1440 wide.
+   */
+  size?: "phone" | "page";
 };
 
-/**
- * The phone-width column every new screen sits in.
- * WAITING ON THE WIDE DESIGN: at wide widths the column is centred until the wide layout is drawn
- * (plan M5, one wide layout for every screen); replace this rule then.
- */
-export default function AppColumn({ children, className }: AppColumnProps) {
-  return <div className={[styles.column, className].filter(Boolean).join(" ")}>{children}</div>;
+/** The column every screen sits in: phone width, or the whole page at wide widths. */
+export default function AppColumn({ children, className, size = "phone" }: AppColumnProps) {
+  return (
+    <div className={[styles.column, size === "page" && styles.page, className].filter(Boolean).join(" ")}>
+      {children}
+    </div>
+  );
 }
