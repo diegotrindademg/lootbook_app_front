@@ -135,7 +135,8 @@ export default function ChoiceConfig({ block, onChange }: { block: ChoiceBlock; 
             {!option.name.trim() && <p className={styles.fieldError}>An option needs a name</p>}
           </DetailField>
           {/* WAITING ON DESIGN: page 5 draws "Add art" from the device (C3 to C8); where the file is
-              stored is open for Kerley (contract slice 2 v1.1, 10). Until then, a link. */}
+              stored is open for Kerley (contract slice 2 v1.1, 10). Until then, a link.
+              TODO(Kerley): where option art files are stored (v1.1, no spec yet). */}
           <SectionLabel>Art</SectionLabel>
           <DetailField label="Image link">
             <Field

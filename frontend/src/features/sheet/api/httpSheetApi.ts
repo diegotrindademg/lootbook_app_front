@@ -113,6 +113,7 @@ function errorDetails(error: unknown): Record<string, unknown> {
 }
 
 export const httpSheetApi: SheetApi = {
+  // TODO(Kerley): `document` and `revision` on GET /sheet (sheet-document.md 3.2), `derivedValues` (derived-values.md 4).
   async getSheet(id) {
     const { sheet } = await lootbookRequest<{ sheet: ApiSheet }>(`/characters/${id}/sheet`);
     return fromStored({
@@ -132,6 +133,7 @@ export const httpSheetApi: SheetApi = {
     });
   },
 
+  // TODO(Kerley): new route PUT /sheet-document with the content in one call (sheet-document.md 3.1, 3.3); 409 with details.currentRevision.
   async saveSheet(id, { name, nameChanged, baseRevision, payload }) {
     let revision: number;
     try {
@@ -160,6 +162,7 @@ export const httpSheetApi: SheetApi = {
     return { revision };
   },
 
+  // TODO(Kerley): POST /characters takes the document and its content (sheet-document.md 3.3).
   async createCharacter({ name, payload }) {
     const { character } = await lootbookRequest<{ character: ApiCharacter }>("/characters", {
       method: "POST",
@@ -176,6 +179,7 @@ export const httpSheetApi: SheetApi = {
     return { id: character.id };
   },
 
+  // TODO(Kerley): new route, one-value-write.md 3; 409 with details.currentValue (3.1).
   async changeResource(id, key, change) {
     try {
       const { resource, clamped } = await lootbookRequest<{

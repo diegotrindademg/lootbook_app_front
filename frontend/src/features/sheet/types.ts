@@ -216,7 +216,8 @@ export type ResourceBlock = BlockBase & {
 /**
  * `trainable` is the list setting "Items can be trained" (Figma page 5, L3 A). The document has no field
  * for it: every row of a trainable list carries `trained`, and a list is read as trainable when a row
- * does, so an empty trainable list comes back off after a save (a field for Kerley to add).
+ * does, so an empty trainable list comes back off after a save.
+ * TODO(Kerley): a list-level `trainable` field in the sheet document; sheet-document.md 2.2 has only `trained` per row.
  */
 export type ListBlock = BlockBase & { type: "list"; showIcons: boolean; trainable: boolean; rows: ListRow[] };
 
