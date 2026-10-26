@@ -7,3 +7,16 @@
   width: calc(min(100vw, var(--app-column-width)) - 40px);
   transform: translateX(-50%);
 }
+
+/* Page 7, A7 (2425:36636): 16 above the tab bar (24 + 70 + 16 from the foot). Wide (2427:40007): 640 wide, centred, 32 from the foot. */
+.low {
+  top: auto;
+  bottom: calc(110px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 1024px) {
+  .low {
+    bottom: 32px;
+    width: 640px;
+  }
+}

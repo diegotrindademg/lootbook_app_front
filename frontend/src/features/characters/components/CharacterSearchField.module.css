@@ -49,16 +49,15 @@
   }
 }
 
-/* Drawn 28 at white 8%, like the library's close; the touch target is 44. */
+/* Page 7, "Clear search": a 24 circle at white 8%, a 12 cross; the touch target is 44. */
 .clear {
   position: relative;
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  margin-right: -8px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -70,7 +69,7 @@
 .clear::after {
   content: "";
   position: absolute;
-  inset: -8px;
+  inset: -10px;
 }
 
 .clear:focus-visible {

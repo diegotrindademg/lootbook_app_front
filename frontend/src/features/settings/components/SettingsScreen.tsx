@@ -3,30 +3,34 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthSession } from "@/features/auth/state/AuthSessionContext";
+import { announceOnArrival } from "@/features/auth/utils/arrivalNotice";
 import AppColumn from "@/shared/components/layout/AppColumn";
+import NavBar from "@/shared/components/layout/NavBar";
 import TabBar from "@/shared/components/layout/TabBar";
-import PillButton from "@/shared/components/ui/PillButton";
+import Icon from "@/shared/components/ui/Icon";
 import Spinner from "@/shared/components/ui/Spinner";
 import packageJson from "../../../../package.json";
 import styles from "./SettingsScreen.module.css";
 
 /**
- * Settings (contract 3 and v1.1, 6): the account's email, read only, Sign out, and the app version;
- * nothing else in v1.0. The avatar and the tab bar's Settings item open it. Sign out asks nothing
- * first, works offline (it only forgets this device's session) and lands on the signed-out list.
- * Signed out it says "Not signed in" and offers Sign in. At wide, a centred 640 column.
- * WAITING ON DESIGN: 7. Plain until page 7 lands.
+ * Settings (Figma page 7, Flow 14, T1 2425:36558; wide 2427:39701): the nav bar on top, then ACCOUNT
+ * ("Signed in as" and the email, read only, and a Sign out row) and ABOUT (the app version). The
+ * avatar and the tab bar's Settings item open it. Sign out asks nothing, works offline (it only forgets
+ * this device's session) and lands on the signed-out list with "You are signed out." for 4 seconds.
+ * Signed out: "Not signed in" and Sign in, which comes back here. At wide, a centred 640 column.
  */
 export default function SettingsScreen() {
   const router = useRouter();
-  const { status, user, signOut } = useAuthSession();
+  const session = useAuthSession();
+  const { status, user } = session;
   const [leaving, setLeaving] = useState(false);
 
   const onSignOut = async () => {
     setLeaving(true);
     try {
-      await signOut();
+      await session.signOut();
     } finally {
+      announceOnArrival("signed-out");
       router.push("/");
     }
   };
@@ -34,48 +38,66 @@ export default function SettingsScreen() {
   return (
     <AppColumn size="page">
       <main className={styles.screen}>
-        <h1 className={styles.title}>Settings</h1>
+        <NavBar
+          signedIn={status === "checking" ? null : status === "signed-in"}
+          profileName={user?.displayName}
+          profileAvatar={user?.avatarUrl}
+          signInHref="/sign-in?returnTo=%2Fsettings"
+          profileHref="/settings"
+        />
+        <div className={styles.column}>
+          <h1 className={styles.title}>Settings</h1>
 
-        <section className={styles.section} aria-labelledby="settings-account">
-          <h2 className={styles.caption} id="settings-account">
-            Account
-          </h2>
-          {status === "checking" && (
-            <div className={styles.card} role="status">
-              <Spinner size={20} />
-              <span className={styles.hidden}>Checking your account</span>
+          <section className={styles.section} aria-labelledby="settings-account">
+            <h2 className={styles.caption} id="settings-account">
+              Account
+            </h2>
+            {status === "checking" && (
+              <div className={`${styles.card} ${styles.checking}`} role="status">
+                <Spinner size={20} />
+                <span className={styles.hidden}>Checking your account</span>
+              </div>
+            )}
+            {status === "signed-in" && user && (
+              <div className={styles.card}>
+                <div className={styles.signedInAs}>
+                  <span className={styles.label}>Signed in as</span>
+                  <span className={styles.email}>{user.email}</span>
+                </div>
+                <div className={styles.hairline} />
+                <button type="button" className={styles.row} onClick={onSignOut} disabled={leaving}>
+                  <Icon name="logout" size={20} className={styles.rowIcon} />
+                  Sign out
+                </button>
+              </div>
+            )}
+            {status === "signed-out" && (
+              <div className={`${styles.card} ${styles.notSignedIn}`}>
+                <span className={styles.email}>Not signed in</span>
+                <span className={styles.label}>Sign in to keep your characters in your account.</span>
+                <button
+                  type="button"
+                  className={styles.signIn}
+                  onClick={() => router.push("/sign-in?returnTo=%2Fsettings")}
+                >
+                  Sign in
+                </button>
+              </div>
+            )}
+          </section>
+
+          <section className={styles.section} aria-labelledby="settings-about">
+            <h2 className={styles.caption} id="settings-about">
+              About
+            </h2>
+            <div className={styles.card}>
+              <div className={styles.version}>
+                <span className={styles.versionLabel}>App version</span>
+                <span className={styles.versionValue}>{packageJson.version}</span>
+              </div>
             </div>
-          )}
-          {status === "signed-in" && user && (
-            <>
-              <div className={styles.card}>
-                <span className={styles.label}>Email</span>
-                <span className={styles.value}>{user.email}</span>
-              </div>
-              <PillButton variant="flat" busy={leaving} onClick={onSignOut}>
-                Sign out
-              </PillButton>
-            </>
-          )}
-          {status === "signed-out" && (
-            <>
-              <div className={styles.card}>
-                <span className={styles.value}>Not signed in</span>
-              </div>
-              <PillButton onClick={() => router.push("/sign-in?returnTo=%2Fsettings")}>Sign in</PillButton>
-            </>
-          )}
-        </section>
-
-        <section className={styles.section} aria-labelledby="settings-about">
-          <h2 className={styles.caption} id="settings-about">
-            About
-          </h2>
-          <div className={styles.card}>
-            <span className={styles.label}>Version</span>
-            <span className={styles.value}>{packageJson.version}</span>
-          </div>
-        </section>
+          </section>
+        </div>
       </main>
       <TabBar activeId="settings" createHref="/characters/create" />
     </AppColumn>

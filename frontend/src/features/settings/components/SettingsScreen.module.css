@@ -1,13 +1,19 @@
 /*
- * WAITING ON DESIGN: 7. A plain screen in the slice 1 language: the sheet's title type, the library's
- * shelf captions, the sunken cards. Phone without the status bar (tops 24 higher than a frame would be).
+ * Figma page 7, T1 (2425:36558), without the status bar (every top 24 higher): the nav bar, the title at
+ * 80, ACCOUNT at 138 with its card at 167, ABOUT 28 under the card with its card 10 under the label.
+ * Wide (2427:39701): the same column, 640 wide at 400, the title at 136 under the 104 nav bar.
  */
 .screen {
   display: flex;
   flex-direction: column;
-  gap: 28px;
   min-height: 100dvh;
-  padding: 31px 20px 120px;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom));
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  padding: 27px 20px 0;
 }
 
 .title {
@@ -22,38 +28,57 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  margin-top: 24px;
 }
 
+.section + .section {
+  margin-top: 28px;
+}
+
+/* Figma: Open Sans 700/14, 2.24 tracking (0.16em), Text/Muted. */
 .caption {
   margin: 0;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
-  line-height: 18px;
-  letter-spacing: 0.12em;
+  line-height: 19px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-content-subtle);
 }
 
+/* Figma "Settings account" and "Settings about": Surface/Card, a hairline, radius 16. */
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-  min-height: 56px;
-  padding: 12px 16px;
+  overflow: hidden;
   border: var(--border-width-hairline) solid var(--color-border-glass);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--color-surface-sunken);
+}
+
+.checking {
+  align-items: center;
+  justify-content: center;
+  min-height: 126px;
+  color: var(--color-accent-default);
+}
+
+.signedInAs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 14px 16px;
 }
 
 .label {
   font-size: var(--font-size-sm);
-  line-height: 18px;
+  line-height: 19px;
   color: var(--color-content-subtle);
 }
 
-.value {
+.email {
   overflow: hidden;
   font-size: 16px;
   font-weight: var(--font-weight-semibold);
@@ -61,6 +86,84 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--color-content-primary);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--color-border-glass);
+}
+
+/* Figma: the 52 high Sign out row, the logout glyph in teal, Open Sans 600/15. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 16px;
+  border: none;
+  background: none;
+  font-family: var(--font-family-body);
+  font-size: 15px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 20px;
+  color: var(--color-content-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.row:focus-visible,
+.signIn:focus-visible {
+  outline: 2px solid var(--color-accent-default);
+  outline-offset: -2px;
+}
+
+.row:disabled {
+  cursor: progress;
+}
+
+.rowIcon {
+  flex-shrink: 0;
+  color: var(--color-accent-default);
+}
+
+.notSignedIn {
+  gap: 4px;
+  padding: 16px;
+}
+
+/* Slice 1's border button, medium: teal ring, a faint teal wash, Acme 18 in Teal-20, 48 high. */
+.signIn {
+  height: 48px;
+  margin-top: 8px;
+  padding: 0 24px;
+  border: 1.5px solid var(--color-teal-60);
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgb(1 110 92 / 20%) 0%, rgb(2 212 177 / 20%) 100%);
+  font-family: var(--font-family-display);
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--color-teal-20);
+  cursor: pointer;
+}
+
+/* Figma "App version": a 52 high row, the label in Open Sans 600/15, the number in Text/Muted. */
+.version {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 16px;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.versionLabel {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-content-primary);
+}
+
+.versionValue {
+  color: var(--color-content-subtle);
 }
 
 .hidden {
@@ -72,11 +175,10 @@
   white-space: nowrap;
 }
 
-/* Contract v1.1, 6: at wide, the centred 640 column under the tab bar (top 20, 70 tall). */
 @media (min-width: 1024px) {
-  .screen {
+  .column {
     width: 640px;
     margin: 0 auto;
-    padding: 130px 0 48px;
+    padding: 32px 0 0;
   }
 }
