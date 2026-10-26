@@ -224,6 +224,7 @@ export default function CharacterScreen() {
         onSearch={() => searchRef.current?.focus()}
         // Phone: out of the way while typing or while a sheet is up. Wide: always at the top (Figma).
         hidden={!wide && (searchFocused || overlayOpen)}
+        inert={overlayOpen}
       />
 
       {undoFor && !overlayOpen && (

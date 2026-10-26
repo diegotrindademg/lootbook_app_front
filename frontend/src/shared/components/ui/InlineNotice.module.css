@@ -85,11 +85,11 @@
   cursor: pointer;
 }
 
-/* Drawn 32px tall; the touch target is 44px. */
+/* Drawn 32px tall; the touch target is 44px (7 past the 1px border). */
 .action::after {
   content: "";
   position: absolute;
-  inset: -6px -4px;
+  inset: -7px -5px;
 }
 
 .action:focus-visible {

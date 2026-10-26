@@ -79,11 +79,11 @@
   text-decoration: none;
 }
 
-/* The pill is drawn 32px tall; this keeps the touch target at 44px. */
+/* The pill is drawn 32px tall; this keeps the touch target at 44px (7 past the 1px border). */
 .signIn::after {
   content: "";
   position: absolute;
-  inset: -6px 0;
+  inset: -7px -1px;
 }
 
 .signIn:focus-visible {

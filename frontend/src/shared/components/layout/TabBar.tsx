@@ -19,6 +19,8 @@ type TabBarProps = {
   /** Search is an action, not a place: on the character screen it focuses the search field. */
   onSearch?: () => void;
   hidden?: boolean;
+  /** Shown but out of reach while a dialog or menu is over the screen (wide keeps the bar on screen). */
+  inert?: boolean;
 };
 
 /**
@@ -27,7 +29,7 @@ type TabBarProps = {
  * only the current tab shows its label (it may run past its slot); the others are icon only and carry
  * their name as the accessible name.
  */
-export default function TabBar({ activeId, createHref, onSearch, hidden = false }: TabBarProps) {
+export default function TabBar({ activeId, createHref, onSearch, hidden = false, inert = false }: TabBarProps) {
   const tab = (item: TabItem) => {
     const active = item.id === activeId;
     return (
@@ -49,7 +51,7 @@ export default function TabBar({ activeId, createHref, onSearch, hidden = false 
       className={hidden ? `${styles.tabBar} ${styles.hidden}` : styles.tabBar}
       aria-label="Main"
       aria-hidden={hidden || undefined}
-      inert={hidden || undefined}
+      inert={hidden || inert || undefined}
     >
       {LEFT.map(tab)}
       <div className={styles.createSlot}>

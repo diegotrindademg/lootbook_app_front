@@ -16,6 +16,8 @@
 .title {
   flex: 1;
   min-width: 0;
+  /* 44 tall, the touch target, with the underline at its foot. */
+  min-height: 44px;
   padding: 0 0 6px;
   border: none;
   border-bottom: var(--border-width-hairline) solid color-mix(in srgb, var(--color-content-primary) 35%, transparent);
