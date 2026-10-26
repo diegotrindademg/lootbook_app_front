@@ -1,6 +1,8 @@
+import { createClient } from "@supabase/supabase-js";
 import { DEV_FAKES_ENABLED } from "@/shared/config/devFakes";
 import { AuthError, type AuthChangeListener, type AuthProvider, type AuthUser } from "../types";
 import { fakeAuthClient } from "./fakeAuthClient";
+import { createSupabaseAuthClient } from "./supabaseAuthClient";
 
 /**
  * Everything the screens need from sign-in, and nothing about how it is done.
@@ -32,10 +34,8 @@ export interface AuthClient {
 const notConnected = () => Promise.reject(new AuthError("not-connected"));
 
 /**
- * TODO(Kerley): the Supabase version of AuthClient goes here (supabase-js `auth.signInWithPassword`,
- * `signUp`, `resend`, `signInWithOAuth`, `resetPasswordForEmail`, the recovery session the reset
- * link opens with, `updateUser`, `signOut`, `getSession`, `onAuthStateChange`). Until then every call fails with "not-connected", the list is
- * read without a token (a development back end answers as its guest user), and the screens still render.
+ * With no Supabase project set, every call fails with "not-connected", the list is read without a
+ * token (a development back end answers as its guest user), and the screens still render.
  */
 const notConnectedAuthClient: AuthClient = {
   signIn: notConnected,
@@ -51,4 +51,18 @@ const notConnectedAuthClient: AuthClient = {
   onChange: () => () => undefined,
 };
 
-export const authClient: AuthClient = DEV_FAKES_ENABLED ? fakeAuthClient : notConnectedAuthClient;
+/**
+ * The fake in development with NEXT_PUBLIC_LOOTBOOK_FAKE=1; Supabase when both variables are set;
+ * not connected otherwise.
+ * TODO(Kerley): the Supabase client is a DRAFT, tested against a mock only (supabaseAuthClient.ts and
+ * docs/FRONTEND_V1.md); it needs your OK and your project's URL and anon key before it is used.
+ */
+function pickAuthClient(): AuthClient {
+  if (DEV_FAKES_ENABLED) return fakeAuthClient;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (url && anonKey) return createSupabaseAuthClient(createClient(url, anonKey).auth);
+  return notConnectedAuthClient;
+}
+
+export const authClient: AuthClient = pickAuthClient();
