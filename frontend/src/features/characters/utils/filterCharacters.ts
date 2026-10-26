@@ -1,12 +1,17 @@
 import type { CharacterListTab, CharacterSummary } from "../types";
 
+/** Whether a card matches the search text, by name or subtitle (contract 3). Empty text matches everything. */
+export function matchesSearch(card: { name: string; subtitle: string | null }, query: string) {
+  const needle = query.trim().toLowerCase();
+  return !needle || `${card.name}\n${card.subtitle ?? ""}`.toLowerCase().includes(needle);
+}
+
 /** The cards a list tab shows, narrowed by the search text (name and subtitle, contract 3), newest first. */
 export function filterCharacters(
   characters: CharacterSummary[],
   tab: CharacterListTab,
   query: string,
 ): CharacterSummary[] {
-  const needle = query.trim().toLowerCase();
   return characters
     .filter((c) => {
       const archived = c.status === "ARCHIVED";
@@ -14,8 +19,7 @@ export function filterCharacters(
       if (tab === "Favorites") return c.favorite && !archived;
       return !archived;
     })
-    .filter((c) => !needle || `${c.name}
-${c.subtitle ?? ""}`.toLowerCase().includes(needle))
+    .filter((c) => matchesSearch(c, query))
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 

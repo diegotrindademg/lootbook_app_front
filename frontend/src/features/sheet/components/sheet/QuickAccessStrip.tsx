@@ -123,15 +123,30 @@ function Tile({ block, onSetResource }: { block: SheetBlock; onSetResource?: Set
   let body: React.ReactNode;
   if (block.type === "resource" && block.model === "pips") {
     const tier = block.tiers[0];
+    // WAITING ON DESIGN: 6. The strip keeps its compact pips as a picture; minus and plus (44 targets) change
+    // the value, so no target is smaller than 44 (L-26, Oct 26).
     body = tier && (
-      <Pips
-        label={block.title}
-        current={tier.current}
-        max={tier.max}
-        size={12}
-        gap={5}
-        onSet={onSetResource && ((next) => onSetResource(block, 0, next))}
-      />
+      <span className={styles.counter}>
+        <Pips label={block.title} current={tier.current} max={tier.max} size={12} gap={5} />
+        {onSetResource && (
+          <span className={styles.counterSteps}>
+            <StepButton
+              kind="minus"
+              size={26}
+              label={`Spend one ${block.title}`}
+              disabled={tier.current <= 0}
+              onClick={() => onSetResource(block, 0, tier.current - 1)}
+            />
+            <StepButton
+              kind="plus"
+              size={26}
+              label={`Add one ${block.title}`}
+              disabled={tier.current >= tier.max}
+              onClick={() => onSetResource(block, 0, tier.current + 1)}
+            />
+          </span>
+        )}
+      </span>
     );
   } else if (block.type === "resource" && block.model === "tiered") {
     const used = block.tiers.reduce((sum, t) => sum + t.current, 0);

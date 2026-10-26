@@ -18,7 +18,7 @@ import { useLaunchSplash } from "../hooks/useLaunchSplash";
 import { SAMPLE_SHEET_PATH } from "@/features/sheet/data/sampleSheet";
 import { SAMPLE_CHARACTER } from "../data/sampleCharacter";
 import type { CharacterListTab, CharacterSummary } from "../types";
-import { emptyLabel, filterCharacters } from "../utils/filterCharacters";
+import { emptyLabel, filterCharacters, matchesSearch } from "../utils/filterCharacters";
 import CarouselSkeleton from "./CarouselSkeleton";
 import CharacterCard from "./CharacterCard";
 import CharacterCarousel, { type CarouselSlide } from "./CharacterCarousel";
@@ -180,6 +180,9 @@ export default function CharacterScreen() {
       })),
       revealKey,
     );
+  } else if (list.characters.length === 0 && tab === "Recent" && query.trim() && matchesSearch(SAMPLE_CHARACTER, query)) {
+    // With no characters (signed out, or none yet), search covers the sample card too (L-26, Oct 26).
+    well = showSlides([sampleSlide]);
   } else if (quietLabel) {
     // Favorites or Archived with nothing in them, or a search with no match (01.5).
     well = <EmptyCharacterCard label={quietLabel} />;

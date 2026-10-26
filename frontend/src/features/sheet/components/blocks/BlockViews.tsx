@@ -142,10 +142,12 @@ function ResourceView({
       )}
       {block.model === "pips" && tier && (
         <>
+          {/* WAITING ON DESIGN: 6. Each pip a 44 pitch so each is a 44 target (L-26, Oct 26; drawn 26). */}
           <Pips
             label={block.title}
             current={tier.current}
             max={tier.max}
+            gap={26}
             onSet={onSetResource && ((next) => onSetResource(block, 0, next))}
           />
           {note}
@@ -161,7 +163,7 @@ function ResourceView({
                 current={t.current}
                 max={t.max}
                 size={16}
-                gap={6}
+                gap={28}
                 onSet={onSetResource && ((next) => onSetResource(block, index, next))}
               />
             </div>
