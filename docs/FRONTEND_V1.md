@@ -1,7 +1,7 @@
 # LootBook v1.0, the front end (for Kerley)
 
 **Resumo (PT):** O front end da v1.0 (lista, login, editor, ficha, Configurações, busca, estados offline e de erro, telefone e tela larga) roda com dados falsos (`NEXT_PUBLIC_LOOTBOOK_FAKE=1`) até as suas rotas existirem; este arquivo diz como rodar, cada chave `?fake=`, onde cada coisa mora e o que cada chamada espera do back end.
-**Resumo (PT):** Tudo que espera por você está marcado `TODO(Kerley)` com a spec e a linha; o login com Supabase é um RASCUNHO testado só com mock e precisa do seu OK; esta pull request deve entrar antes das specs 6 (2.2 a 2.8) e 7 (2.3).
+**Resumo (PT):** Tudo que espera por você está marcado `TODO(Kerley)` com a spec e a linha; o login com Supabase é um RASCUNHO testado só com mock e precisa do seu OK; esta pull request entra primeiro: depois dela os itens 2.2 a 2.8 da spec 6 ficam sem efeito (os arquivos somem), o item 2.4 da spec 7 já está feito aqui, e o item 2.3 da spec 7 (apagar `frontend/app/`) continua valendo e agora apaga 16 arquivos, não 8.
 
 Branch `v1-close-out` of `diegotrindademg/lootbook_app_front`, from `v1-slice-3`. Base: your `main` at
 `2645714`. Nothing under `backend/` changes. The design truth is Figma file `cRD8blrS4BIIQ01JC4GuTN`,
@@ -200,14 +200,14 @@ its data) and the pre-slice home (`features/home`), with what only they used: `s
 `src/app/components/css/AttributeScore.module.css`, and the `framer-motion`, `embla-carousel-react` and
 `react-icons` packages.
 
-Your **colour-fix spec, items 2.2 to 2.8**, and **tidy-up spec, item 2.3**, edit or delete files this pull
-request deletes. Merge this first, then apply what is left of those two specs, checking that each file
-still exists:
+**Merge this pull request first.** Then, from your two clean-up specs:
 
-- colour-fix 2.2 to 2.8: nothing left to do, the files are gone. Item 2.1 (`tailwind.config.js`, the
+- **colour-fix items 2.2 to 2.8: void**, their files are gone. Item 2.1 (`tailwind.config.js`, the
   `primary` colour) is still valid, though nothing uses `primary` any more.
-- tidy-up 2.3 (delete `frontend/app/`): still right; the re-exports this branch added are covered by
-  `src/app` the same way (built here without it: 15 pages). Item 2.4 (`src/app/components/`) is already done here.
+- **tidy-up item 2.4** (`src/app/components/`): already done by this pull request.
+- **tidy-up item 2.3** (delete `frontend/app/`): **still applies**, and now removes 16 files, not 8, because
+  this pull request adds re-exports there. `src/app` serves the same routes without them (a build here
+  without the folder lists the same routes).
 
 Left alone on purpose, not used by anything, for your tidy-up: `public/{file,globe,next,vercel,window}.svg`
 (the Next template), `src/icons/setingsIcon.png`, the two zips and `todo.md` at the root.
