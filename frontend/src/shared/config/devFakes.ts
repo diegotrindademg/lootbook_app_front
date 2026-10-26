@@ -12,9 +12,20 @@ export const DEV_FAKES_ENABLED =
  * - offline: every fake call fails as if there were no network, and the app shows the offline banner;
  *   signing out still works (it only forgets this device's session).
  * - fail-list, fail-sheet, fail-save, fail-play, fail-signin: that one call fails as if offline.
+ * - fail-list-server, fail-sheet-server: the list or sheet read fails as a server error (500), online.
  * - slow: every fake call takes four times as long, to see the loading states.
  */
-export const FAKE_SWITCHES = ["offline", "fail-list", "fail-sheet", "fail-save", "fail-play", "fail-signin", "slow"] as const;
+export const FAKE_SWITCHES = [
+  "offline",
+  "fail-list",
+  "fail-sheet",
+  "fail-save",
+  "fail-play",
+  "fail-signin",
+  "fail-list-server",
+  "fail-sheet-server",
+  "slow",
+] as const;
 export type FakeSwitch = (typeof FAKE_SWITCHES)[number];
 
 const SWITCHES_KEY = "lootbook.dev.fakeSwitches";

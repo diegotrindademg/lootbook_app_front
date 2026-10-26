@@ -1,7 +1,7 @@
 import { authClient } from "@/features/auth/api/authClient";
 import { fakeCharacterList } from "@/features/characters/api/fakeCharactersApi";
 import { LootbookApiError } from "@/shared/api/lootbookRequest";
-import { fakeFails, fakeLatency } from "@/shared/config/devFakes";
+import { fakeFails, fakeLatency, fakeSwitch } from "@/shared/config/devFakes";
 import { FAKE_SHEET_BLOCKS } from "../data/fakeSheets";
 import type { DerivedLink, NoteRow, ResourceRow, SheetDerivedValue, SheetDocument, StatRow } from "../types";
 import { computeDerived } from "../utils/derived";
@@ -18,7 +18,8 @@ import { ResourceChangedError, SheetConflictError } from "./sheetErrors";
  * - a character whose name starts with "Offline" fails its first save (no connection); Retry works;
  * - a character whose name starts with "Stale" gets a conflict (409) on its first save;
  * - a resource whose block title starts with "Flaky" fails every change;
- * - the `?fake=` switches in shared/config/devFakes.ts: fail-sheet, fail-save, fail-play, offline, slow.
+ * - the `?fake=` switches in shared/config/devFakes.ts: fail-sheet, fail-sheet-server, fail-save, fail-play,
+ *   offline, slow.
  */
 
 type StoredRecord = {
@@ -120,6 +121,7 @@ export const fakeSheetApi: SheetApi = {
   async getSheet(id) {
     await fakeLatency(READ_LATENCY_MS);
     if (fakeFails("fail-sheet")) throw offline();
+    if (fakeSwitch("fail-sheet-server")) throw new LootbookApiError("The Lootbook back end answered 500.", 500, null);
     const character = (await fakeCharacterList.read()).find((c) => c.id === id);
     if (!character) throw notFound(id);
     const store = await readStore();

@@ -44,6 +44,11 @@ function offline() {
   return new LootbookApiError("Could not reach the Lootbook back end.", 0, null);
 }
 
+/** What the network layer throws when the back end answers with a failure. */
+function serverError() {
+  return new LootbookApiError("The Lootbook back end answered 500.", 500, null);
+}
+
 /** An action on a character pauses, and fails with `?fake=offline`. */
 async function act() {
   await fakeLatency(ACTION_LATENCY_MS);
@@ -69,6 +74,7 @@ export const fakeCharactersApi: CharactersApi = {
   async list() {
     await fakeLatency(LIST_LATENCY_MS);
     if (fakeFails("fail-list")) throw offline();
+    if (fakeSwitch("fail-list-server")) throw serverError();
     return readList();
   },
   rename: (id, name) => update(id, { name }),
