@@ -30,7 +30,7 @@ export const SAMPLE_BLOCKS: SheetBlock[] = [
     tiers: [{ key: "favours", localId: "favours", label: "Favours owed to you", current: 1, max: 3 }],
   },
   {
-    id: "r5", type: "list", title: "Bonds", icon: "users", pinned: false, density: "full", preset: null, showIcons: false,
+    id: "r5", type: "list", title: "Bonds", icon: "users", pinned: false, density: "full", preset: null, showIcons: false, trainable: false,
     rows: [
       { id: "nadia", name: "Nadia, his sister", note: "Thinks he sells insurance. He lets her." },
       { id: "curic", name: "Ćurić", note: "Holds the debt. Patient about it, which is worse." },

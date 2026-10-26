@@ -209,7 +209,18 @@ export function toPayload(blocks: SheetBlock[]): SheetPayload {
       }
 
       case "list":
-        return { ...base, type: "list", showIcons: block.showIcons, rows: block.rows.map(cleanRow) };
+        return {
+          ...base,
+          type: "list",
+          showIcons: block.showIcons,
+          rows: block.rows.map((row) => {
+            const clean = cleanRow(row);
+            if (block.trainable) clean.trained = Boolean(row.trained);
+            else delete clean.trained;
+            if (!block.showIcons) delete clean.icon;
+            return clean;
+          }),
+        };
 
       case "text":
         if (block.body.trim()) notes.push({ section: block.id, content: block.body.slice(0, 50000) });
@@ -303,7 +314,13 @@ export function fromStored(stored: StoredSheet): CharacterSheet {
           }),
         };
       case "list":
-        return { ...base, type: "list", showIcons: block.showIcons, rows: block.rows };
+        return {
+          ...base,
+          type: "list",
+          showIcons: block.showIcons,
+          trainable: block.rows.some((row) => row.trained !== undefined),
+          rows: block.rows,
+        };
       case "text":
         return { ...base, type: "text", collapsed: block.collapsed, body: noteBySection.get(block.id)?.content ?? "" };
     }

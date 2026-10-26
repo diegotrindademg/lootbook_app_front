@@ -20,13 +20,18 @@ type BlockConfigSheetProps = {
   onChange: (block: SheetBlock) => void;
   onRemove: () => void;
   onDone: () => void;
+  /** Every block of the character, for what one block offers from another (stat names). */
+  siblings: SheetBlock[];
 };
 
 /**
  * Configure one block (design `BlockConfigSheet`, frames 03.3 and 03.4; plan M0 C1): title, icon,
  * pin, width, and the type's own settings. Every change applies at once; Done closes the sheet.
  */
-export default function BlockConfigSheet({ block, onChange, onRemove, onDone }: BlockConfigSheetProps) {
+export default function BlockConfigSheet({ block, onChange, onRemove, onDone, siblings }: BlockConfigSheetProps) {
+  const statNames = siblings.flatMap((b) =>
+    b.type === "stats" ? b.entries.map((entry) => entry.name.trim()).filter(Boolean) : [],
+  );
   const set = (patch: Partial<SheetBlock>) => onChange({ ...block, ...patch } as SheetBlock);
   const titleMissing = !block.title.trim();
 
@@ -93,7 +98,7 @@ export default function BlockConfigSheet({ block, onChange, onRemove, onDone }: 
         {block.type === "choice" && <ChoiceConfig block={block} onChange={onChange} />}
         {block.type === "stats" && <StatSetConfig block={block} onChange={onChange} />}
         {block.type === "resource" && <ResourceConfig block={block} onChange={onChange} />}
-        {block.type === "list" && <ListConfig block={block} onChange={onChange} />}
+        {block.type === "list" && <ListConfig block={block} onChange={onChange} statNames={[...new Set(statNames)]} />}
         {block.type === "text" && <TextConfig block={block} onChange={onChange} />}
       </div>
 

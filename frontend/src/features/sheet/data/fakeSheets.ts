@@ -85,7 +85,7 @@ const BRAKKA: SheetBlock[] = [
     tiers: [{ key: "grit_dice", localId: "grit_dice", label: "Grit dice", current: 3, max: 5 }],
   },
   {
-    id: "f7", type: "list", title: "Skills", icon: "target", pinned: false, density: "full", preset: "skills", showIcons: false,
+    id: "f7", type: "list", title: "Skills", icon: "target", pinned: false, density: "full", preset: "skills", showIcons: false, trainable: true,
     rows: [
       { id: "athletics", name: "Athletics", value: "+6", attribute: "Might", trained: true },
       { id: "intimidation", name: "Intimidation", value: "+3", attribute: "Presence", trained: true },
@@ -94,7 +94,7 @@ const BRAKKA: SheetBlock[] = [
     ],
   },
   {
-    id: "f8", type: "list", title: "Gear", icon: "backpack", pinned: false, density: "full", preset: "customlist", showIcons: true,
+    id: "f8", type: "list", title: "Gear", icon: "backpack", pinned: false, density: "full", preset: "customlist", showIcons: true, trainable: false,
     rows: [
       { id: "warhammer", name: "Warhammer", icon: "sword" },
       { id: "tower", name: "Tower shield", icon: "shield" },
@@ -152,7 +152,7 @@ const SORREL: SheetBlock[] = [
     ],
   },
   {
-    id: "s5", type: "list", title: "Known spells", icon: "book", pinned: false, density: "full", preset: "feats", showIcons: true,
+    id: "s5", type: "list", title: "Known spells", icon: "book", pinned: false, density: "full", preset: "feats", showIcons: true, trainable: false,
     rows: [
       { id: "hex", name: "Hex of the Drowned", note: "1st · curse", icon: "sparkles" },
       { id: "lantern", name: "Lantern Step", note: "2nd · movement", icon: "bolt" },

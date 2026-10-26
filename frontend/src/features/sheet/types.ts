@@ -213,7 +213,12 @@ export type ResourceBlock = BlockBase & {
   tiers: ResourceTier[];
 };
 
-export type ListBlock = BlockBase & { type: "list"; showIcons: boolean; rows: ListRow[] };
+/**
+ * `trainable` is the list setting "Items can be trained" (Figma page 5, L3 A). The document has no field
+ * for it: every row of a trainable list carries `trained`, and a list is read as trainable when a row
+ * does, so an empty trainable list comes back off after a save (a field for Kerley to add).
+ */
+export type ListBlock = BlockBase & { type: "list"; showIcons: boolean; trainable: boolean; rows: ListRow[] };
 
 export type TextBlock = BlockBase & { type: "text"; collapsed: boolean; body: string };
 

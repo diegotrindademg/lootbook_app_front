@@ -325,6 +325,7 @@ export default function EditorScreen({ characterId }: { characterId: string | nu
               <BlockConfigSheet
                 key={configuring.id}
                 block={configuring}
+                siblings={draft.blocks}
                 onChange={(block) => dispatch({ type: "change", block })}
                 onRemove={() => requestRemove(configuring)}
                 onDone={() => setSheet(null)}

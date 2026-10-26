@@ -50,7 +50,14 @@ export function blockFromPreset(preset: BlockPreset): SheetBlock {
       };
     }
     case "list":
-      return { ...base, type: "list", showIcons: Boolean(preset.showIcons), rows: [] };
+      // Skills and Proficiencies start with "Items can be trained" on, as page 5 draws Skills (L2).
+      return {
+        ...base,
+        type: "list",
+        showIcons: Boolean(preset.showIcons),
+        trainable: preset.key === "skills" || preset.key === "proficiencies",
+        rows: [],
+      };
     case "text":
       return { ...base, type: "text", collapsed: false, body: "" };
   }
