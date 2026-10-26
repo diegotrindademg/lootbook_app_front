@@ -65,6 +65,11 @@
   white-space: nowrap;
 }
 
+/*
+ * The quiet card's words in content-muted, #A1A1A1 (Figma Neutral/Neutral-50; 6.87:1 on the card), not the
+ * outline's white at 35% (3.23:1). Page 7's no-match frames, review F4.
+ */
 .quiet .label {
   font-size: var(--font-size-sm);
+  color: var(--color-content-muted);
 }
